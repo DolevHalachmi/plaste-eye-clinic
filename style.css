@@ -1,0 +1,59 @@
+@font-face{
+    src: url(fonts/Alef-Bold.ttf);
+    font-family: alef-bold;
+}
+
+@font-face{
+    src: url(fonts/Alef-Regular.ttf);
+    font-family: alef-regular;
+}
+body{
+    background-image: linear-gradient(to bottom, hsla(66, 65%, 91%, 0.603), hsla(65, 78%, 91%, 0.308)),
+    url(image/examination.JPG);
+    background-size:cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment:local;
+   background-color:hsla(66, 79%, 91%, 0.911);
+   color:rgb(87, 29, 29נק);
+   font-family: alef-regular, alef-bold, Arial;
+}
+#tableHeader{
+    background-color: rgba(255, 228, 196, 0.541);
+}
+#tableHeader a{
+    text-decoration: none;
+}
+h1{
+    text-shadow: 2px 2px 5px;
+    text-align: center;
+}
+#logo1{
+    height: 150px;
+    margin-left: 15px;
+    float: left;
+}
+.borderh2{
+    border-bottom: 3px solid rgb(9, 3, 15);
+    border-radius: 10px;
+    display: flow-root;
+}   
+a:hover{
+    color: rgb(39, 109, 141);
+    font-size:1.1em;
+}
+.photos{
+    display:flex;
+    justify-content: space-between;
+    padding-bottom: 1%;
+}
+.photos img{
+    border: 2px solid rgb(0, 0, 0);
+    border-radius: 15px;
+}
+.photos img:hover{
+    border:2px solid rgba(119, 17, 17, 0.61);
+}
+#home-icon:hover{
+    transform: scale(1.1);
+}
