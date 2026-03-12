@@ -35,9 +35,9 @@
                 <tr>
                     <th width="100px"><a href="index.html"><img id = "home-icon" src="emojis/house-solid-full.svg" alt="home"></a></th>
                     <th width="100px"><a href="aesthetic.html">אסתטיקה</a></th>
-                    <th width="100px"><a href="eyes.html">עיניים</a></th>
+                    <th width="100px"><a id = "activeA" href="eyes.html">עיניים</a></th>
                     <th width="100px"><a href="aboutUs.html">קצת עלינו</a></th>
-                    <th width="100px"><a href="Comments.html">שאלות ותשובות</a></th>
+                    <th width="100px"><a href="Comments.html">תגובות/שאלות</a></th>
                     <th width="100px"><a href="contact.html">דרכי תקשורת</a></th>
                     <th width="100px"><a href="appointment.html">לקביעת תורים</a></th>
                 </tr>
@@ -46,37 +46,40 @@
                 <img src=" image/eyelogo_removedBackground.png" alt = "eyelogo photo">
             </div>
         </nav>
-        <div class="background">
+        <div class="background-eyes">
             <header>
-                <h2> דף בית </h2>
-                <p>אפשר לכתוב על האתר</p>
-                <p>אפשר לכתוב עוד</p>
-                <h3>מרפאת עיניים</h3>
+                <h1> לכתוב כאן משהו על עיניים </h1>
             </header>
         </div>
         <main>
-            <div class = "video">
-                <span class = "video-content">
-                    <h1>ד"ר אורלי הלחמי</h1>
-                    <h3> h3 </h3>
-                    <p> אני כותב על כמה אמא רופאה טובה </p>
-                </span>
-                <iframe src="https://www.youtube.com/embed/BHsQbE7WsuA" title="ד&quot;ר אורלי הלחמי, רופאה בכירה במחלקת עיניים במרכז רפואי העמק, מסבירה על ניתוחי פזילה" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
-                </iframe>
-            </div>
-            
-            <div class = surgery>
-                <div class = surg-text>
-                    <h2> h2 </h2>
-                    <h4> h4 </h4>
-                    <p> p </p>
+            <div class="slider">
+                <img class="slides" src = "image/child1.jpg" alt = "jawline">
+                <img class="slides" src = "image/child2.jpg" alt = "eyes">
+                <img class="slides" src = "image/womans-eyes.jpg" alt = "flower">
+                <img class="slides" src = "image/ofekKid.jpeg" alt = "river">
+                <button class = "prev" onclick="prevClick()">&#10095</button>
+                <button class = "next" onclick="nextClick()">&#10094</button>
+                <div class = "shifter">
+                    <button class = "shiftBtn" id="shift0" onclick="shiftClick(0)">1</button>
+                    <button class = "shiftBtn" id="shift1" onclick="shiftClick(1)">2</button>
+                    <button class = "shiftBtn" id="shift2" onclick="shiftClick(2)">3</button>
+                    <button class = "shiftBtn" id="shift3" onclick="shiftClick(3)">4</button>
                 </div>
-                <img src = "image/surgery.jpeg">
             </div>
-
+            <div class="eye-treatments">
+                <div class="treatE1"><h4>בדיקות חדות ראיה</h4></div>
+                <div class="treatE2"><h4>מעקב תקופתי</h4></div>
+                <div class="treatE3"><h4>זיהומים ודלקות</h4></div>
+                <div class="treatE4"><h4>עין יבשה</h4></div>
+                <div class="treatE5"><h4>גלאוקומה</h4></div>
+                <div class="treatE6"><h4>זריקות תוך-עיניות</h4></div>
+                <div class="treatE7"><h4>פזילה</h4></div>
+                <div class="treatE7"><h4>עין עצלה</h4></div>
+            </div>
 
         </main>
         <script src="footer.js"></script>
         <main-footer></main-footer>
-    </body>    
+        <script src="slider.js"></script>
+    </body>
 </html>
