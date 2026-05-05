@@ -44,9 +44,9 @@ export default function OurTeam() {
         ))}
     </div>
     <div className="team-grid">
-      <img src={img4}/>
-      <img src={img5}/>
-      <img src={img6}/>
+      <img src={img4} alt="צוות המרפאה 1" />
+      <img src={img5} alt="צוות המרפאה 2" />
+      <img src={img6} alt="צוות המרפאה 3" />
     </div>
 
 

@@ -1,23 +1,39 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
+// Shows one slide at a time and auto-advances when there is more than one.
 function Slider({ slides, interval = 6000 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  // Moves the slider to the next item and wraps back to the start.
+  const goNext = useCallback(() => {
+    if (!slides.length) {
+      return;
+    }
+
+    setCurrentIndex((index) => (index + 1) % slides.length);
+  }, [slides.length]);
+
+  // Moves the slider to the previous item and wraps back to the end.
+  const goPrev = useCallback(() => {
+    if (!slides.length) {
+      return;
+    }
+
+    setCurrentIndex((index) => (index - 1 + slides.length) % slides.length);
+  }, [slides.length]);
+
+  // Starts the auto-advance timer and cleans it up on re-render/unmount.
   useEffect(() => {
+    if (slides.length < 2) {
+      return undefined;
+    }
+
     const timer = window.setInterval(() => {
       goNext();
     }, interval);
 
     return () => window.clearInterval(timer);
-  }, [slides.length, interval]);
-
-  const goNext = () => {
-    setCurrentIndex((index) => (index + 1) % slides.length);
-  };
-
-  const goPrev = () => {
-    setCurrentIndex((index) => (index - 1 + slides.length) % slides.length);
-  };
+  }, [goNext, interval, slides.length]);
 
   return (
     <section className="slider-shell">
@@ -55,4 +71,4 @@ function Slider({ slides, interval = 6000 }) {
   );
 }
 
-export default Slider
+export default Slider;

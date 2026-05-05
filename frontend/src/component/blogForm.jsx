@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
-export default function blogForm() {
+// Simple standalone contact form component kept for reuse/testing.
+export default function BlogForm() {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -9,6 +10,7 @@ export default function blogForm() {
     comment: '',
   });
 
+  // Copies each input change into the local form state.
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData((prev) => ({
@@ -17,6 +19,7 @@ export default function blogForm() {
     }));
   };
 
+  // Logs the current form values and then clears the form.
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -35,6 +38,7 @@ export default function blogForm() {
     });
   };
 
+  // Resets the form back to its initial empty values.
   const handleReset = () => {
     setFormData({
       name: '',

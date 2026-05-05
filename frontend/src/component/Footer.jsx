@@ -1,38 +1,41 @@
-export default function Footer({onNavigate}) {
+export default function Footer({ onNavigate }) {
   return (
     <footer>
-      <table id="footer-table">
-        <thead>
-          <tr>
-            <th width="150">כתובת</th>
-            <th width="150">טלפון להשארת הודעה בווצאפ/סמס</th>
-            <th width="150">מענה טלפון בזמן קבלת קהל</th>
-            <th width="150">לתיאום תור ממוחשב 24 שעות ביממה</th>
-            <th width="150">לאתר תיאום תורים</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td width="200">עפולה בניין נקסטופ רחוב התוכנה <b>4</b> כניסה <b>B</b> קומה שלישית משרד מספר <b>13</b></td>
-            <td width="150"><b>0505311200</b></td>
-            <td width="150"><b>046040555</b></td>
-            <td width="150"><b>073-3808758</b></td>
-            <td width="100">לפרטים ולקישור לאתר קביעת תורים לחצו על דף   <button
-                type="button" id="footer-btn"
-                onClick={() => onNavigate('contact')}
-              >
-              <b>צור קשר</b>
-            </button></td>
-          </tr>
-          <tr>
-            <td />
-            <td />
-            <td width="150">שעות קבלה בימי ראשון, שני בשעות 15:30-18:30</td>
-            <td />
-            <td />
-          </tr>
-        </tbody>
-      </table>
+      <div className="footer-shell">
+        <article className="footer-card">
+          <h3>כתובת</h3>
+          <p>עפולה, בניין נקסטופ, רחוב התוכנה 4, כניסה B, קומה 3, משרד 13</p>
+        </article>
+
+        <article className="footer-card">
+          <h3>ווצאפ / סמס</h3>
+          <p>0505311200</p>
+        </article>
+
+        <article className="footer-card">
+          <h3>מענה טלפון</h3>
+          <p>046040555</p>
+          <p>ימי ראשון ושני, 15:30-18:30</p>
+        </article>
+
+        <article className="footer-card">
+          <h3>מוקד תורים</h3>
+          <p>073-3808758</p>
+        </article>
+
+        <article className="footer-card footer-card-action">
+          <h3>לתיאום תור</h3>
+          <p>לקישור ולאפשרויות יצירת קשר עברו לדף צור קשר.</p>
+          <button
+            type="button"
+            id="footer-btn"
+            className="footer-link-button"
+            onClick={() => onNavigate('contact')}
+          >
+            צור קשר
+          </button>
+        </article>
+      </div>
     </footer>
   );
 }

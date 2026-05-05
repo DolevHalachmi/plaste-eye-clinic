@@ -13,27 +13,24 @@ const navItems = [
 
 export default function Navbar({ currentPage, onNavigate }) {
   return (
-    <nav>
-      <table id="tableHeader">
-        <tbody>
-          <tr>
-            {navItems.map((item) => (
-              <th key={item.key} width="100px">
-                <button
-                  type="button"
-                  className={`nav-link ${currentPage === item.key ? 'active' : ''}`}
-                  onClick={() => onNavigate(item.key)}
-                >
-                  {item.label}
-                </button>
-              </th>
-            ))}
-          </tr>
-        </tbody>
-      </table>
+    <nav className="site-nav">
+      <div className="nav-inner">
+        <div className="eye-container">
+          <img src={eyeLogo} alt="Clinic logo" />
+        </div>
 
-      <div className="eye-container">
-        <img src={eyeLogo} alt="Clinic logo" />
+        <div className="nav-links" role="navigation" aria-label="Primary">
+          {navItems.map((item) => (
+            <button
+              key={item.key}
+              type="button"
+              className={`nav-link ${currentPage === item.key ? 'active' : ''}`}
+              onClick={() => onNavigate(item.key)}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
       </div>
     </nav>
   );

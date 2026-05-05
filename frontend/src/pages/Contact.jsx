@@ -5,7 +5,7 @@ export default function Contact() {
     <>
       <section className="hero-section background-contact" style={{backgroundImage: `url(${bgImage})`}}>
         <header>
-          <h2>אסתטיקה</h2>
+          <h2>צור קשר</h2>
         </header>
       </section>
 
@@ -29,16 +29,24 @@ export default function Contact() {
         loading="lazy"
         referrerPolicy="no-referrer-when-downgrade"
       />
-        <span class = "map-content">
-          <h1>ד"ר אורלי הלחמי</h1>
-          <h3> h3 </h3>
-          <p> אני כותב על כמה אמא רופאה טובה </p>
-        </span>  
+
+      <div className="map-content content-card">
+        <h2>ד"ר אורלי הלחמי</h2>
+        <p>מרפאת עיניים, פזילה, ילדים ואסתטיקה רפואית בעפולה.</p>
+        <p>ניתן להגיע למרפאה בתיאום מראש ולקבל מענה טלפוני בשעות הקבלה.</p>
+      </div>
     </section>
     
     <section className="appointmentSite">
-      <img src={appImg} id = "appointmentImg" />
-      <a id = "appSiteBtn" target="_blank" href="https://www.rofim.org.il/minisite/%D7%93%D7%A8_%D7%94%D7%9C%D7%97%D7%9E%D7%99-%D7%90%D7%99%D7%99%D7%9C_%D7%90%D7%95%D7%A8%D7%9C%D7%99">לאתר קביעת תורים</a>
+      <img src={appImg} id="appointmentImg" alt="תיאום תורים" />
+      <a
+        id="appSiteBtn"
+        target="_blank"
+        rel="noopener noreferrer"
+        href="https://www.rofim.org.il/minisite/%D7%93%D7%A8_%D7%94%D7%9C%D7%97%D7%9E%D7%99-%D7%90%D7%99%D7%99%D7%9C_%D7%90%D7%95%D7%A8%D7%9C%D7%99"
+      >
+        לאתר קביעת תורים
+      </a>
     </section>
 
     </>

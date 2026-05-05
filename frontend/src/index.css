@@ -35,12 +35,19 @@ body,
 body {
   direction: rtl;
   background-color: hsl(32, 85%, 90%);
+  -webkit-text-size-adjust: 100%;
 }
 
 button,
 input,
 textarea {
   font: inherit;
+}
+
+img,
+video,
+iframe {
+  max-width: 100%;
 }
 
 a {
@@ -57,7 +64,7 @@ main {
 
 /* nav */
 
-nav {
+.site-nav {
   background-image: linear-gradient(
     to bottom right,
     hsla(48, 96%, 90%, 0.74) 0%,
@@ -67,66 +74,85 @@ nav {
     hsla(48, 96%, 80%, 0.7) 100%
   );
   width: 100%;
-  display: flex;
   position: sticky;
   top: 0;
-  align-items: center;
   min-height: 5rem;
   z-index: 1000;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  padding: 0.75rem 1rem;
 }
 
-#tableHeader {
-  width: 70%;
-  text-align: center;
+.nav-inner {
+  width: min(1200px, 100%);
   margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  flex: 1;
 }
 
 .nav-link {
-  background: transparent;
-  border: none;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
   cursor: pointer;
   color: hsl(202, 59%, 41%);
   text-decoration: none;
-  padding: 0.6rem 0.4rem;
+  padding: 0.75rem 1rem;
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
 
 .nav-link:hover {
   color: hsl(202, 59%, 55%);
-  font-size: 1.15rem;
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.28);
 }
 
 .nav-link.active {
   color: hsl(202, 51%, 18%);
-  font-size: 1.05rem;
+  background: rgba(255, 255, 255, 0.52);
+  border-color: rgba(53, 76, 92, 0.22);
 }
 
 #home-icon {
-  width: 38px;
-  height: 38px;
+  width: 26px;
+  height: 26px;
 }
 
 .eye-container {
-  height: 95%;
   overflow: hidden;
   border: 2px solid black;
   background-color: white;
   border-radius: 15px;
   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.25);
-  margin-left: 15px;
   padding: 0;
+  flex-shrink: 0;
 }
 
 .eye-container img {
   width: auto;
-  height: 78px;
+  height: 72px;
   display: block;
 }
 
 /* home-page beginning */
 
 .hero-section {
-  min-height: 600px;
+  min-height: clamp(320px, 62vh, 600px);
   background-size: cover;
   background-repeat: no-repeat;
   overflow: visible;
@@ -138,15 +164,16 @@ nav {
 }
 
 header {
-  padding-top: 7%;
-  margin-right: 1rem;
-  font-size: 1.5rem;
+  padding-top: clamp(2rem, 7vw, 4.5rem);
+  padding-inline: 1.25rem;
+  font-size: clamp(1.15rem, 2.8vw, 1.5rem);
   color: white;
 }
 
 header h2 {
   text-align: right;
   animation: fadeIn 1.5s ease-in-out forwards;
+  margin: 0;
 }
 
 .video {
@@ -156,10 +183,20 @@ header h2 {
   margin: 5rem auto;
   align-items: center;
   gap: 2rem;
+  background-image: linear-gradient(
+    to bottom right,
+    hsla(48, 96%, 90%, 0.534) 0%,
+    hsla(45, 57%, 51%, 0.664) 30%,
+    hsla(44, 55%, 54%, 0.678) 50%,
+    hsla(51, 88%, 42%, 0.651) 70%,
+    hsla(48, 96%, 80%, 0.548) 100%
+  );
+  padding: 1rem;
+  border-radius: 1rem;
 }
 
 .video-content {
-  flex: 1;
+  flex: 1 1 22rem;
   padding: 1rem;
   text-align: right;
 }
@@ -174,11 +211,21 @@ header h2 {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
 }
 
+.video-content h3{
+  font-size: 1.2rem;
+}
+
+.video-content h5{
+  font-size: 1.1rem;
+}
+
 .video iframe {
-  flex: 0 0 20rem;
+  flex: 1 1 22rem;
   aspect-ratio: 16 / 9;
   width: min(40vw, 640px);
   border: none;
+  border-radius: 1.5rem;
+  min-height: 240px;
 }
 
 .surgery {
@@ -187,18 +234,33 @@ header h2 {
   gap: 2rem;
   width: min(92%, 1240px);
   margin: 0 auto 4rem;
+  background-image: linear-gradient(
+    to bottom right,
+    hsla(48, 96%, 90%, 0.534) 0%,
+    hsla(45, 57%, 51%, 0.664) 30%,
+    hsla(44, 55%, 54%, 0.678) 50%,
+    hsla(51, 88%, 42%, 0.651) 70%,
+    hsla(48, 96%, 80%, 0.548) 100%
+  );
+  padding: 1rem;
+  border-radius: 1rem;
 }
 
 .surgery img {
   width: min(50vw, 700px);
+  flex: 1 1 22rem;
   height: auto;
-  border-top-right-radius: 5rem;
-  border-bottom-right-radius: 5rem;
+  border-radius: 2rem;
+}
+
+.surg-text {
+  flex: 1 1 22rem;
 }
 
 .surg-text p {
   text-align: right;
   line-height: 1.9;
+  font-size: 1.1rem;
 }
 
 /* home-page ending */
@@ -211,10 +273,10 @@ header h2 {
 }
 
 .video-aesthetic {
-  min-height: 90vh;
+  min-height: auto;
   display: flex;
   justify-content: center;
-  gap: 6vw;
+  gap: 2rem;
   margin: 2rem auto;
   align-items: center;
   width: min(92%, 1200px);
@@ -222,6 +284,7 @@ header h2 {
 
 .video-aesthetic video {
   width: min(42%, 500px);
+  flex: 1 1 18rem;
   max-height: 75vh;
   object-fit: cover;
 }
@@ -317,7 +380,7 @@ header h2 {
     box-shadow: 0 10px 30px rgba(80, 40, 60, 0.08);
     transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
     min-height: 200px;
-    min-width: 220px;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -402,22 +465,25 @@ header h2 {
   padding-bottom: 4rem;
 }
 .member-img{
-  height: 30vh;
-  width:auto;
-  border-radius: 5rem;
+  width: 100%;
+  max-width: 240px;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 2rem;
 }
 .team-grid{
-  display: flexbox;
-  justify-content: flex-start;
-  gap: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0 1rem 4rem;
 }
 .team-grid img{
-  justify-content: flex-start;
-  max-width:40vw;
-  border-radius: 1rem;
-  margin: 1rem;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 1.5rem;
 }
 
 /* ourTeam-page ending */
@@ -435,23 +501,27 @@ header h2 {
     background-position-y: 30%;
     background-position-x: 30%;
     min-height: 600px;
-    padding:10%;
-    min-width: 600px;
+    padding: clamp(2rem, 6vw, 4rem) 1rem 5rem;
     overflow: visible;
     clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);
 }
 
 .leave-message .leave-box{
-    display:flexbox;
-    margin-top: 5rem;
-    padding: 4rem;
-    border: 1px solid rgb(201, 17, 17);
-    box-shadow: 2px 2px 5px black;
+    width: min(980px, 100%);
+    margin: 3rem auto 0;
+    padding: clamp(1.25rem, 4vw, 3rem);
+    border: 1px solid rgba(201, 17, 17, 0.35);
+    box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.14);
     text-align: center;
-    display:flexbox;
-    background-color: hsla(32, 84%, 90%, 0.651);
-    
+    background-color: hsla(32, 84%, 90%, 0.72);
+    border-radius: 1.5rem;
 }
+
+.leave-box form{
+    display: grid;
+    gap: 1rem;
+}
+
 .leave-message-icon{
     fill: rgb(196, 91, 91);
     width: 30px;
@@ -467,7 +537,7 @@ header h2 {
 
 
 #telephone-icon {
-    margin-right:5rem;
+    margin-right:0;
 }
 #phone{
     text-align:right;
@@ -482,27 +552,66 @@ header h2 {
 }
 
 .comment-group{
-    display: flex;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 2rem;
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    align-items: start;
+    gap: 1rem;
 }
 
 #subject-icon{
-    margin-right: 5rem;
+    margin-right: 0;
+}
+
+.first-row,
+.second-row {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr) 2rem minmax(0, 1fr);
+    gap: 1rem;
+    align-items: center;
+}
+
+.first-row label,
+.second-row label,
+.comment-group label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.leave-box input[type="text"],
+.leave-box input[type="tel"],
+.leave-box input[type="email"],
+.leave-box textarea {
+    width: 100%;
+    border: 1px solid rgba(53, 76, 92, 0.18);
+    border-radius: 1rem;
+    padding: 0.85rem 1rem;
+    background: rgba(255, 255, 255, 0.92);
+    text-align: right;
+}
+
+.leave-box textarea {
+    min-height: 150px;
+    resize: vertical;
 }
 
 #resetBtn{
     background-color: rgba(230, 5, 5, 0.836);
     color:white;
     border-radius: 1rem;
+    border: none;
+    padding: 0.75rem 1.4rem;
+    cursor: pointer;
+    justify-self: center;
 }
 #submitBtn{
     background-color: rgb(230, 5, 5);
     color:white;
     border-radius: 1rem;
+    border: none;
+    padding: 0.75rem 1.4rem;
+    cursor: pointer;
+    justify-self: center;
 }
 
 /* blog-page ending */
@@ -515,52 +624,168 @@ header h2 {
 }
 
 .map{
-  display: flex;
-  width: 90vw;
-  margin: 5rem auto;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+  width: min(92%, 1200px);
+  margin: 4rem auto;
+  gap: 1.5rem;
   align-items: center;
 }
 .map iframe{
-  float: right;
-  margin-left: auto;
-  border-top-left-radius: 4rem;
-  border-bottom-left-radius: 4rem;
+  width: 100%;
+  min-height: 380px;
+  margin-left: 0;
+  border-radius: 2rem;
 }
 .map-content{
-  text-align: center;
+  text-align: right;
+  display: grid;
+  align-content: center;
+  gap: 0.75rem;
+}
+
+.map-content h2,
+.map-content p {
+  margin: 0;
 }
 
 .appointmentSite {
   display: flex;
   align-items: center;
+  justify-content: center;
   text-align: center;
   flex-wrap: wrap;
-  height: 30vh;
-  margin: 3rem;
+  min-height: 0;
+  width: min(92%, 960px);
+  margin: 0 auto 4rem;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  border-radius: 1.5rem;
+  background: rgba(255, 255, 255, 0.55);
 }
 
 #appointmentImg {
-  height: 30vh;
-  width: auto;
-  max-width: 80vw;
+  height: auto;
+  width: min(320px, 100%);
+  max-width: 100%;
   border-radius: 1rem;
 }
 
 #appSiteBtn {
   display: inline-block;
-  margin: 2rem;
   color: rgb(0, 0, 0);
   background-color: rgb(255, 255, 252);
   text-decoration: none;
-  padding: 0.6rem 1rem;
+  padding: 0.8rem 1.2rem;
   align-self: center;
-  border-radius: 1rem;
+  border-radius: 999px;
 }
 
 /* contact-page ending */
 
 /* clinic-page beginning */
+
+.clinic-page {
+  padding: 5rem 1.5rem;
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.7), transparent 40%),
+    linear-gradient(180deg, hsl(44, 97%, 92%), hsl(335, 100%, 97%));
+}
+
+.clinic-shell {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: stretch;
+}
+
+.clinic-intro {
+  text-align: right;
+  align-self: center;
+}
+
+.clinic-intro h1 {
+  margin: 0 0 1rem;
+  font-size: clamp(2.2rem, 4vw, 3.5rem);
+  color: hsl(199, 40%, 20%);
+}
+
+.clinic-intro p {
+  line-height: 1.9;
+  font-size: 1.05rem;
+}
+
+.clinic-card {
+  width: 100%;
+  max-width: none;
+  padding: 2rem;
+  text-align: right;
+}
+
+.clinic-form,
+.clinic-admin-state {
+  display: grid;
+  gap: 1rem;
+}
+
+.clinic-field {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.clinic-field span {
+  font-family: alef-bold, Arial, sans-serif;
+  color: hsl(199, 40%, 20%);
+}
+
+.clinic-field input {
+  border: 1px solid rgba(53, 76, 92, 0.2);
+  border-radius: 1rem;
+  padding: 0.85rem 1rem;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.clinic-button {
+  border: none;
+  border-radius: 999px;
+  padding: 0.9rem 1.4rem;
+  background: linear-gradient(135deg, hsl(198, 55%, 39%), hsl(180, 49%, 30%));
+  color: white;
+  cursor: pointer;
+  justify-self: start;
+}
+
+.clinic-button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.clinic-button.secondary {
+  background: linear-gradient(135deg, hsl(339, 52%, 54%), hsl(334, 36%, 42%));
+}
+
+.clinic-feedback {
+  margin: 1rem 0 0;
+  padding: 0.85rem 1rem;
+  border-radius: 1rem;
+}
+
+.clinic-feedback.error {
+  background: rgba(181, 42, 42, 0.12);
+  color: hsl(0, 52%, 38%);
+}
+
+.clinic-feedback.success {
+  background: rgba(28, 125, 91, 0.12);
+  color: hsl(158, 57%, 28%);
+}
+
+.clinic-actions {
+  display: flex;
+  justify-content: flex-start;
+}
 
 /* clinic-page ending */
 
@@ -573,7 +798,7 @@ header h2 {
 
 .slider-frame {
   position: relative;
-  height: 70vh;
+  height: min(70vh, 720px);
   aspect-ratio: 16/9;
   border-radius: 2rem;
   margin: 0 auto;
@@ -653,7 +878,7 @@ header h2 {
   border-radius: 999px;
   background: hsl(338, 64%, 92%);
   color: hsl(334, 36%, 26%);
-  font-size: 2rem;
+  font-size: clamp(1rem, 4vw, 2rem);
   font-weight: 600;
 }
 
@@ -708,6 +933,38 @@ header h2 {
   margin-bottom: 2rem;
 }
 
+.blog-page {
+  padding-bottom: 3rem;
+}
+
+.blog-header {
+  width: min(1200px, 100%);
+  margin: 0 auto 2rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.blog-header p {
+  margin: 0 auto;
+  max-width: 760px;
+  line-height: 1.8;
+}
+
+.blog-admin-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.blog-admin-pill {
+  padding: 0.75rem 1.1rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.74);
+  border: 1px solid rgba(53, 76, 92, 0.14);
+}
+
 .faq-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -733,15 +990,147 @@ header h2 {
   text-align: right;
 }
 
+.blog-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.blog-card-top h3 {
+  margin: 0 0 0.4rem;
+}
+
+.blog-meta {
+  margin: 0;
+  font-size: 0.92rem;
+  color: hsl(199, 16%, 35%);
+}
+
+.blog-card-actions,
+.blog-editor-actions,
+.blog-idea-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.blog-primary-button,
+.blog-secondary-button,
+.blog-danger-button {
+  border: none;
+  border-radius: 999px;
+  padding: 0.8rem 1.2rem;
+  color: white;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.blog-primary-button {
+  background: linear-gradient(135deg, hsl(198, 55%, 39%), hsl(180, 49%, 30%));
+}
+
+.blog-secondary-button {
+  background: linear-gradient(135deg, hsl(36, 70%, 58%), hsl(24, 66%, 48%));
+}
+
+.blog-danger-button {
+  background: linear-gradient(135deg, hsl(346, 58%, 56%), hsl(332, 42%, 42%));
+}
+
+.blog-primary-button:disabled,
+.blog-secondary-button:disabled,
+.blog-danger-button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.blog-admin-editor {
+  max-width: 1200px;
+  margin-top: 1rem;
+  text-align: right;
+  display: grid;
+  gap: 1rem;
+}
+
+.blog-editor-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.blog-editor-grid label {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.blog-editor-grid span {
+  font-family: alef-bold, Arial, sans-serif;
+  color: hsl(199, 40%, 20%);
+}
+
+.blog-editor-grid input,
+.blog-editor-grid textarea {
+  border: 1px solid rgba(53, 76, 92, 0.18);
+  border-radius: 1rem;
+  padding: 0.9rem 1rem;
+  background: rgba(255, 255, 255, 0.92);
+  text-align: right;
+}
+
+.blog-feedback {
+  max-width: 1200px;
+  margin: 1rem auto 0;
+  padding: 0.85rem 1rem;
+  border-radius: 1rem;
+  text-align: center;
+}
+
+.blog-feedback.error {
+  background: rgba(181, 42, 42, 0.12);
+  color: hsl(0, 52%, 38%);
+}
+
+.blog-feedback.success {
+  background: rgba(28, 125, 91, 0.12);
+  color: hsl(158, 57%, 28%);
+}
+
+.blog-empty-state {
+  grid-column: 1 / -1;
+}
+
+.blog-idea-section {
+  width: min(1200px, 100%);
+  margin: 2.5rem auto 0;
+  text-align: right;
+}
+
+.blog-idea-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.blog-idea-card {
+  text-align: right;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.blog-idea-card h3 {
+  margin: 0;
+}
+
 /* social */
 
 .social {
   background-color: hsl(32, 85%, 90%);
   display: flex;
-  gap: 2rem;
+  gap: 0.75rem 1.25rem;
   align-items: center;
   padding: 0.7rem 1.25rem;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .social a {
@@ -750,16 +1139,13 @@ header h2 {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  font-size: 0.95rem;
 }
 
 .social .email,
 .social .message,
 .social .phone {
-  margin-right: 1rem;
-}
-
-.social .facebook {
-  margin-right: auto;
+  margin-right: 0;
 }
 
 #mail-icon,
@@ -808,15 +1194,35 @@ footer {
   padding-bottom: 2rem;
 }
 
-#footer-table {
-  width: 80%;
+.footer-shell {
+  width: min(1200px, 92%);
   margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
 }
 
-#footer-table td,
-#footer-table th {
+.footer-card {
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 1.5rem;
+  padding: 1.2rem;
   text-align: center;
-  padding: 0.55rem;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.footer-card h3,
+.footer-card p {
+  margin: 0;
+}
+
+.footer-card p {
+  line-height: 1.7;
+}
+
+.footer-card-action {
+  align-content: center;
 }
 
 #footer-btn{
@@ -825,6 +1231,11 @@ footer {
   border: none;
   border-radius: 1rem;
   cursor: pointer;
+}
+
+.footer-link-button {
+  justify-self: center;
+  padding: 0.75rem 1.2rem;
 }
 
 /* responsive */
@@ -844,21 +1255,132 @@ footer {
     width: 100%;
   }
 
-  nav {
-    flex-direction: column-reverse;
-    padding: 1rem 0;
-    max-height: 100px;
+  .site-nav {
+    padding: 0.75rem;
   }
 
-  #tableHeader {
-    width: 90vw;
+  .nav-inner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .nav-links {
+    width: 100%;
   }
 
   .social {
     justify-content: center;
   }
 
-  .social .facebook {
-    margin-right: 0;
+  .clinic-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .blog-card-top {
+    flex-direction: column;
+  }
+
+  .blog-card-actions,
+  .blog-editor-actions,
+  .blog-idea-actions,
+  .blog-admin-bar {
+    justify-content: center;
+  }
+
+  .map {
+    grid-template-columns: 1fr;
+  }
+
+  .team-grid {
+    grid-template-columns: 1fr;
+  }
+
+  footer {
+    clip-path: none;
+    padding-top: 3rem;
+  }
+}
+
+@media (max-width: 700px) {
+  header {
+    text-align: center;
+  }
+
+  header h2 {
+    text-align: center;
+  }
+
+  .simple-page,
+  .aesthetic-treatments-section,
+  .eyes-videos,
+  .clinic-page {
+    padding-inline: 1rem;
+  }
+
+  .video,
+  .surgery,
+  .content-card,
+  .clinic-card {
+    padding: 1.25rem;
+  }
+
+  .slider-frame {
+    aspect-ratio: 4 / 5;
+    height: auto;
+    min-height: 280px;
+  }
+
+  .slider-arrow {
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+  }
+
+  .leave-message {
+    min-height: 0;
+    clip-path: none;
+    padding-bottom: 2rem;
+  }
+
+  .leave-message .leave-box {
+    margin-top: 1.5rem;
+  }
+
+  .first-row,
+  .second-row,
+  .comment-group {
+    grid-template-columns: 1fr;
+  }
+
+  .first-row label,
+  .second-row label,
+  .comment-group label {
+    display: none;
+  }
+
+  .blog-primary-button,
+  .blog-secondary-button,
+  .blog-danger-button,
+  .clinic-button,
+  .footer-link-button,
+  #appSiteBtn,
+  #submitBtn,
+  #resetBtn {
+    width: 100%;
+  }
+
+  .social {
+    padding-inline: 0.75rem;
+  }
+
+  .social span {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .social .facebook,
+  .social .instagram {
+    width: auto;
   }
 }
