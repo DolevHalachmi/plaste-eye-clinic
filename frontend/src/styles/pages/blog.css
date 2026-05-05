@@ -1,0 +1,335 @@
+.leave-message-header {
+  text-align: center;
+}
+
+.blog-page {
+  padding-bottom: 3rem;
+}
+
+.blog-header {
+  width: min(1200px, 100%);
+  margin: 0 auto 2rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.blog-header p {
+  margin: 0 auto;
+  max-width: 760px;
+  line-height: 1.8;
+}
+
+.blog-admin-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.blog-admin-pill {
+  padding: 0.75rem 1.1rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.74);
+  border: 1px solid rgba(53, 76, 92, 0.14);
+}
+
+.faq-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.blog-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.blog-card-top h3 {
+  margin: 0 0 0.4rem;
+}
+
+.blog-meta {
+  margin: 0;
+  font-size: 0.92rem;
+  color: hsl(199, 16%, 35%);
+}
+
+.blog-card-actions,
+.blog-editor-actions,
+.blog-idea-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.blog-primary-button,
+.blog-secondary-button,
+.blog-danger-button {
+  border: none;
+  border-radius: 999px;
+  padding: 0.8rem 1.2rem;
+  color: white;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.blog-primary-button {
+  background: linear-gradient(135deg, hsl(198, 55%, 39%), hsl(180, 49%, 30%));
+}
+
+.blog-secondary-button {
+  background: linear-gradient(135deg, hsl(36, 70%, 58%), hsl(24, 66%, 48%));
+}
+
+.blog-danger-button {
+  background: linear-gradient(135deg, hsl(346, 58%, 56%), hsl(332, 42%, 42%));
+}
+
+.blog-primary-button:disabled,
+.blog-secondary-button:disabled,
+.blog-danger-button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.blog-admin-editor {
+  max-width: 1200px;
+  margin-top: 1rem;
+  text-align: right;
+  display: grid;
+  gap: 1rem;
+}
+
+.blog-editor-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.blog-editor-grid label {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.blog-editor-grid span {
+  font-family: alef-bold, Arial, sans-serif;
+  color: hsl(199, 40%, 20%);
+}
+
+.blog-editor-grid input,
+.blog-editor-grid textarea {
+  border: 1px solid rgba(53, 76, 92, 0.18);
+  border-radius: 1rem;
+  padding: 0.9rem 1rem;
+  background: rgba(255, 255, 255, 0.92);
+  text-align: right;
+}
+
+.blog-feedback {
+  max-width: 1200px;
+  margin: 1rem auto 0;
+  padding: 0.85rem 1rem;
+  border-radius: 1rem;
+  text-align: center;
+}
+
+.blog-feedback.error {
+  background: rgba(181, 42, 42, 0.12);
+  color: hsl(0, 52%, 38%);
+}
+
+.blog-feedback.success {
+  background: rgba(28, 125, 91, 0.12);
+  color: hsl(158, 57%, 28%);
+}
+
+.blog-empty-state {
+  grid-column: 1 / -1;
+}
+
+.blog-idea-section {
+  width: min(1200px, 100%);
+  margin: 2.5rem auto 0;
+  text-align: right;
+}
+
+.blog-idea-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.blog-idea-card {
+  text-align: right;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.blog-idea-card h3 {
+  margin: 0;
+}
+
+.leave-message {
+  background-image: linear-gradient(to left, rgba(52, 54, 44, 0.158), rgba(119, 119, 119, 0.123)), url('../../assets/Img/tree.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-position-y: 30%;
+  background-position-x: 30%;
+  min-height: 600px;
+  padding: clamp(2rem, 6vw, 4rem) 1rem 5rem;
+  overflow: visible;
+  clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);
+}
+
+.leave-message .leave-box {
+  width: min(980px, 100%);
+  margin: 3rem auto 0;
+  padding: clamp(1.25rem, 4vw, 3rem);
+  border: 1px solid rgba(201, 17, 17, 0.35);
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.14);
+  text-align: center;
+  background-color: hsla(32, 84%, 90%, 0.72);
+  border-radius: 1.5rem;
+}
+
+.leave-box form {
+  display: grid;
+  gap: 1rem;
+}
+
+.leave-message-icon {
+  fill: rgb(196, 91, 91);
+  width: 30px;
+  height: 30px;
+  margin-bottom: 1rem;
+  vertical-align: middle;
+  transition: transform 0.2s ease-in-out;
+}
+
+.leave-message-icon:hover {
+  transform: scale(1.2);
+}
+
+#telephone-icon,
+#subject-icon {
+  margin-right: 0;
+}
+
+#phone {
+  text-align: right;
+}
+
+#comment-icon {
+  vertical-align: top;
+  display: inline-block;
+  position: relative;
+  top: -10px;
+}
+
+.first-row,
+.second-row {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr) 2rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: center;
+}
+
+.comment-group {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  align-items: start;
+  gap: 1rem;
+}
+
+.first-row label,
+.second-row label,
+.comment-group label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.leave-box input[type='text'],
+.leave-box input[type='tel'],
+.leave-box input[type='email'],
+.leave-box textarea {
+  width: 100%;
+  border: 1px solid rgba(53, 76, 92, 0.18);
+  border-radius: 1rem;
+  padding: 0.85rem 1rem;
+  background: rgba(255, 255, 255, 0.92);
+  text-align: right;
+}
+
+.leave-box textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+#resetBtn,
+#submitBtn {
+  color: white;
+  border-radius: 1rem;
+  border: none;
+  padding: 0.75rem 1.4rem;
+  cursor: pointer;
+  justify-self: center;
+}
+
+#resetBtn {
+  background-color: rgba(230, 5, 5, 0.836);
+}
+
+#submitBtn {
+  background-color: rgb(230, 5, 5);
+}
+
+@media (max-width: 900px) {
+  .blog-card-top {
+    flex-direction: column;
+  }
+
+  .blog-card-actions,
+  .blog-editor-actions,
+  .blog-idea-actions,
+  .blog-admin-bar {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 700px) {
+  .leave-message {
+    min-height: 0;
+    clip-path: none;
+    padding-bottom: 2rem;
+  }
+
+  .leave-message .leave-box {
+    margin-top: 1.5rem;
+  }
+
+  .first-row,
+  .second-row,
+  .comment-group {
+    grid-template-columns: 1fr;
+  }
+
+  .first-row label,
+  .second-row label,
+  .comment-group label {
+    display: none;
+  }
+
+  .blog-primary-button,
+  .blog-secondary-button,
+  .blog-danger-button,
+  #submitBtn,
+  #resetBtn {
+    width: 100%;
+  }
+}

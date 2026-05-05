@@ -43,7 +43,12 @@ function Slider({ slides, interval = 6000 }) {
             key={`${slide.alt}-${index}`}
             className={`slide ${index === currentIndex ? 'activeSlide' : ''}`}
           >
-            <img src={slide.src} alt={slide.alt} />
+            <img
+              src={slide.src}
+              alt={slide.alt}
+              loading={index === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+            />
           </div>
         ))}
 

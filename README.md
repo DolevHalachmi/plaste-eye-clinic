@@ -96,11 +96,13 @@ You can override the default database and admin values with environment variable
 
 Backend database settings:
 
+- `DB_URL`
 - `DB_USERNAME`
 - `DB_PASSWORD`
 
 Admin seed settings:
 
+- `APP_CORS_ALLOWED_ORIGINS`
 - `ADMIN_USERNAME`
 - `ADMIN_PASSWORD`
 - `ADMIN_DISPLAY_NAME`
@@ -184,6 +186,15 @@ Backend:
 ```powershell
 .\mvnw.cmd test
 ```
+
+## Deployment Checklist
+
+Before deploying:
+
+1. Set real values for `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, `ADMIN_USERNAME`, `ADMIN_PASSWORD`, and `APP_CORS_ALLOWED_ORIGINS`.
+2. Make sure `APP_CORS_ALLOWED_ORIGINS` matches the real frontend domain.
+3. Replace oversized image and video assets with compressed versions for faster mobile loading.
+4. Run `npm run build` and `.\mvnw.cmd test` again before publishing.
 
 ## Troubleshooting
 

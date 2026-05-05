@@ -20,6 +20,7 @@ export default function Home() {
         <iframe
           src="https://www.youtube.com/embed/BHsQbE7WsuA"
           title='ד"ר אורלי הלחמי'
+          loading="lazy"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           referrerPolicy="strict-origin-when-cross-origin"
           allowFullScreen
@@ -34,7 +35,7 @@ export default function Home() {
           <p>משנת 2020 אני עוסקת באסתטיקה מתוך מחשבה והבנה שמראה אסתטי אינו פחות חשוב מתפקוד מיטבי.</p>
         </div>
 
-        <img src={surgeryImage} alt="Surgery" />
+        <img src={surgeryImage} alt="Surgery" loading="lazy" />
       </section>
     </>
   );

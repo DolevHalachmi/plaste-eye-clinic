@@ -1,0 +1,88 @@
+.background-aesthetic {
+  background-position-y: bottom 80%;
+  clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);
+}
+
+.video-aesthetic {
+  min-height: auto;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin: 2rem auto;
+  align-items: center;
+  width: min(92%, 1200px);
+}
+
+.video-aesthetic video {
+  width: min(42%, 500px);
+  flex: 1 1 18rem;
+  max-height: 75vh;
+  object-fit: cover;
+}
+
+.video-aesthetic #video-aesthetic1 {
+  border-top-left-radius: 5rem;
+  border-bottom-left-radius: 5rem;
+}
+
+.video-aesthetic #video-aesthetic2 {
+  border-top-right-radius: 5rem;
+  border-bottom-right-radius: 5rem;
+}
+
+.aesthetic-treatments-section {
+  padding: 5rem 2rem;
+  background: linear-gradient(to bottom, hsl(336, 100%, 99%), hsl(336, 100%, 93%), hsl(48, 97%, 80%));
+}
+
+.aesthetic-treatments-header {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 3rem;
+}
+
+.treatments-grid,
+.members-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.treatment-card,
+.member-card {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(180, 130, 150, 0.2);
+  border-radius: 1.5rem;
+  padding: 2rem 1.25rem;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(80, 40, 60, 0.08);
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.treatment-card:hover,
+.member-card:hover {
+  transform: translateY(-8px);
+}
+
+@media (max-width: 900px) {
+  .video-aesthetic {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .video-aesthetic video {
+    width: 100%;
+  }
+}
+
+@media (max-width: 700px) {
+  .aesthetic-treatments-section {
+    padding-inline: 1rem;
+  }
+}

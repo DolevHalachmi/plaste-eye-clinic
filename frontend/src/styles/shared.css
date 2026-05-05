@@ -1,0 +1,132 @@
+.hero-section {
+  min-height: clamp(320px, 62vh, 600px);
+  background-size: cover;
+  background-repeat: no-repeat;
+  overflow: visible;
+}
+
+.background {
+  background-position: center 30%;
+  clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);
+}
+
+header {
+  padding-top: clamp(2rem, 7vw, 4.5rem);
+  padding-inline: 1.25rem;
+  font-size: clamp(1.15rem, 2.8vw, 1.5rem);
+  color: white;
+}
+
+header h2 {
+  margin: 0;
+  text-align: right;
+  animation: fadeIn 1.5s ease-in-out forwards;
+}
+
+.section-tag {
+  display: inline-block;
+  margin-bottom: 1rem;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  background: hsl(338, 64%, 92%);
+  color: hsl(334, 36%, 26%);
+  font-size: clamp(1rem, 4vw, 2rem);
+  font-weight: 600;
+}
+
+.section-header h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin-bottom: 1rem;
+  color: hsl(321, 19%, 14%);
+}
+
+.section-header p,
+.content-card p {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: hsl(321, 10%, 32%);
+}
+
+.content-card {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(180, 130, 150, 0.2);
+  border-radius: 1.5rem;
+  padding: 2rem 1.25rem;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(80, 40, 60, 0.08);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.content-card:hover {
+  transform: translateY(-8px);
+}
+
+.card-icon {
+  width: 62px;
+  height: 62px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f7d6e4, #fcecf3);
+  font-size: 1.7rem;
+  margin-bottom: 1rem;
+}
+
+.simple-page {
+  padding: 5rem 2rem;
+  background: linear-gradient(to bottom, hsl(336, 100%, 99%), hsl(336, 100%, 93%));
+  text-align: center;
+}
+
+.simple-page h1 {
+  margin-top: 0;
+  margin-bottom: 2rem;
+}
+
+.two-column {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.two-column img {
+  width: 100%;
+  border-radius: 1.5rem;
+}
+
+.contact-card,
+.faq-item {
+  text-align: right;
+}
+
+.page-loading {
+  display: grid;
+  place-items: center;
+}
+
+@media (max-width: 900px) {
+  .two-column {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  header {
+    text-align: center;
+  }
+
+  header h2 {
+    text-align: center;
+  }
+
+  .simple-page {
+    padding-inline: 1rem;
+  }
+
+  .content-card {
+    padding: 1.25rem;
+  }
+}

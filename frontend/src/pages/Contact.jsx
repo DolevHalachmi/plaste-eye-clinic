@@ -38,7 +38,7 @@ export default function Contact() {
     </section>
     
     <section className="appointmentSite">
-      <img src={appImg} id="appointmentImg" alt="תיאום תורים" />
+      <img src={appImg} id="appointmentImg" alt="תיאום תורים" loading="lazy" decoding="async" />
       <a
         id="appSiteBtn"
         target="_blank"

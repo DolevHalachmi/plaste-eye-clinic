@@ -1,0 +1,117 @@
+.clinic-page {
+  padding: 5rem 1.5rem;
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.7), transparent 40%),
+    linear-gradient(180deg, hsl(44, 97%, 92%), hsl(335, 100%, 97%));
+}
+
+.clinic-shell {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: stretch;
+}
+
+.clinic-intro {
+  text-align: right;
+  align-self: center;
+}
+
+.clinic-intro h1 {
+  margin: 0 0 1rem;
+  font-size: clamp(2.2rem, 4vw, 3.5rem);
+  color: hsl(199, 40%, 20%);
+}
+
+.clinic-intro p {
+  line-height: 1.9;
+  font-size: 1.05rem;
+}
+
+.clinic-card {
+  width: 100%;
+  max-width: none;
+  padding: 2rem;
+  text-align: right;
+}
+
+.clinic-form,
+.clinic-admin-state {
+  display: grid;
+  gap: 1rem;
+}
+
+.clinic-field {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.clinic-field span {
+  font-family: alef-bold, Arial, sans-serif;
+  color: hsl(199, 40%, 20%);
+}
+
+.clinic-field input {
+  border: 1px solid rgba(53, 76, 92, 0.2);
+  border-radius: 1rem;
+  padding: 0.85rem 1rem;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.clinic-button {
+  border: none;
+  border-radius: 999px;
+  padding: 0.9rem 1.4rem;
+  background: linear-gradient(135deg, hsl(198, 55%, 39%), hsl(180, 49%, 30%));
+  color: white;
+  cursor: pointer;
+  justify-self: start;
+}
+
+.clinic-button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.clinic-button.secondary {
+  background: linear-gradient(135deg, hsl(339, 52%, 54%), hsl(334, 36%, 42%));
+}
+
+.clinic-feedback {
+  margin: 1rem 0 0;
+  padding: 0.85rem 1rem;
+  border-radius: 1rem;
+}
+
+.clinic-feedback.error {
+  background: rgba(181, 42, 42, 0.12);
+  color: hsl(0, 52%, 38%);
+}
+
+.clinic-feedback.success {
+  background: rgba(28, 125, 91, 0.12);
+  color: hsl(158, 57%, 28%);
+}
+
+.clinic-actions {
+  display: flex;
+  justify-content: flex-start;
+}
+
+@media (max-width: 900px) {
+  .clinic-shell {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .clinic-page {
+    padding-inline: 1rem;
+  }
+
+  .clinic-button {
+    width: 100%;
+  }
+}

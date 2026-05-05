@@ -1,0 +1,99 @@
+.video {
+  display: flex;
+  flex-direction: row-reverse;
+  width: min(90%, 1200px);
+  margin: 5rem auto;
+  align-items: center;
+  gap: 2rem;
+  background-image: linear-gradient(
+    to bottom right,
+    hsla(48, 96%, 90%, 0.534) 0%,
+    hsla(45, 57%, 51%, 0.664) 30%,
+    hsla(44, 55%, 54%, 0.678) 50%,
+    hsla(51, 88%, 42%, 0.651) 70%,
+    hsla(48, 96%, 80%, 0.548) 100%
+  );
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
+.video-content {
+  flex: 1 1 22rem;
+  padding: 1rem;
+  text-align: right;
+}
+
+.video-content h1,
+.video-content h3,
+.video-content h5 {
+  text-align: center;
+}
+
+.video-content h1 {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.video-content h3 {
+  font-size: 1.2rem;
+}
+
+.video-content h5 {
+  font-size: 1.1rem;
+}
+
+.video iframe {
+  flex: 1 1 22rem;
+  aspect-ratio: 16 / 9;
+  width: min(40vw, 640px);
+  border: none;
+  border-radius: 1.5rem;
+  min-height: 240px;
+}
+
+.surgery {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  width: min(92%, 1240px);
+  margin: 0 auto 4rem;
+  background-image: linear-gradient(
+    to bottom right,
+    hsla(48, 96%, 90%, 0.534) 0%,
+    hsla(45, 57%, 51%, 0.664) 30%,
+    hsla(44, 55%, 54%, 0.678) 50%,
+    hsla(51, 88%, 42%, 0.651) 70%,
+    hsla(48, 96%, 80%, 0.548) 100%
+  );
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
+.surg-text {
+  flex: 1 1 22rem;
+}
+
+.surg-text p {
+  text-align: right;
+  line-height: 1.9;
+  font-size: 1.1rem;
+}
+
+.surgery img {
+  width: min(50vw, 700px);
+  flex: 1 1 22rem;
+  height: auto;
+  border-radius: 2rem;
+}
+
+@media (max-width: 900px) {
+  .video,
+  .surgery {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .video iframe,
+  .surgery img {
+    width: 100%;
+  }
+}

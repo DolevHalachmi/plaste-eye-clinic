@@ -1,0 +1,71 @@
+.background-contact {
+  background-position-y: top;
+  clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);
+}
+
+.map {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+  width: min(92%, 1200px);
+  margin: 4rem auto;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.map iframe {
+  width: 100%;
+  min-height: 380px;
+  margin-left: 0;
+  border-top-left-radius: 2rem;
+  border-bottom-left-radius: 2rem;
+}
+
+.map-content {
+  text-align: right;
+  display: grid;
+  align-content: center;
+  gap: 0.75rem;
+}
+
+.map-content h2,
+.map-content p {
+  margin: 0;
+}
+
+.appointmentSite {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  flex-wrap: wrap;
+  min-height: 0;
+  width: min(92%, 960px);
+  margin: 0 auto 4rem;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  border-radius: 1.5rem;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+#appointmentImg {
+  height: auto;
+  width: min(320px, 100%);
+  max-width: 100%;
+  border-radius: 1rem;
+}
+
+#appSiteBtn {
+  display: inline-block;
+  color: rgb(0, 0, 0);
+  background-color: rgb(255, 255, 252);
+  text-decoration: none;
+  padding: 0.8rem 1.2rem;
+  align-self: center;
+  border-radius: 999px;
+}
+
+@media (max-width: 900px) {
+  .map {
+    grid-template-columns: 1fr;
+  }
+}

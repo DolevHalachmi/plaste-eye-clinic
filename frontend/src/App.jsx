@@ -1,12 +1,23 @@
-import { useMemo, useState } from 'react';
+import { Suspense, lazy, useMemo, useState } from 'react';
 import Layout from './component/Layout';
-import Home from './pages/Home';
-import Eyes from './pages/Eyes';
-import Aesthetic from './pages/Aesthetic';
-import OurTeam from './pages/OurTeam';
-import Blog from './pages/Blog';
-import Contact from './pages/Contact';
-import Clinic from './pages/Clinic';
+
+const HomePage = lazy(() => import('./pages/Home'));
+const AestheticPage = lazy(() => import('./pages/Aesthetic'));
+const EyesPage = lazy(() => import('./pages/Eyes'));
+const TeamPage = lazy(() => import('./pages/OurTeam'));
+const BlogPage = lazy(() => import('./pages/Blog'));
+const ContactPage = lazy(() => import('./pages/Contact'));
+const ClinicPage = lazy(() => import('./pages/Clinic'));
+
+const pageComponents = {
+  home: HomePage,
+  aesthetic: AestheticPage,
+  eyes: EyesPage,
+  team: TeamPage,
+  blog: BlogPage,
+  contact: ContactPage,
+  clinic: ClinicPage,
+};
 
 export default function App() {
   const initialPage = useMemo(() => {
@@ -19,21 +30,24 @@ export default function App() {
   const navigate = (nextPage) => {
     window.location.hash = nextPage;
     setPage(nextPage);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const currentPage = {
-    home: <Home />,
-    aesthetic: <Aesthetic />,
-    eyes: <Eyes />,
-    team: <OurTeam />,
-    blog: <Blog />,
-    contact: <Contact />,
-    clinic: <Clinic />,
-  }[page] ?? <Home />;
+  const CurrentPage = pageComponents[page] ?? HomePage;
 
   return (
     <Layout currentPage={page} onNavigate={navigate}>
-      {currentPage}
+      <Suspense
+        fallback={
+          <section className="simple-page page-loading">
+            <div className="content-card">
+              <p>טוענים את הדף...</p>
+            </div>
+          </section>
+        }
+      >
+        <CurrentPage />
+      </Suspense>
     </Layout>
   );
 }

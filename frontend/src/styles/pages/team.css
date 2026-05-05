@@ -1,0 +1,39 @@
+.staff-background {
+  background-image: linear-gradient(to bottom, pink, rgba(255, 255, 255, 0.747), rgba(255, 217, 0, 0.658));
+  background-size: cover;
+}
+
+.members-grid {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+.member-img {
+  width: 100%;
+  max-width: 240px;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 2rem;
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem 4rem;
+}
+
+.team-grid img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .team-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,7 +1,9 @@
 package com.orlyhal.dr_halachmi_clinic.config;
 
+import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -9,6 +11,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -16,6 +20,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 public class SecurityConfig {
+
+	@Value("${app.cors.allowed-origins:http://localhost:5173}")
+	private String allowedOrigins;
 
 	@Bean
 	// Keeps the site public while the custom login endpoints manage admin state.
@@ -41,10 +48,21 @@ public class SecurityConfig {
 	}
 
 	@Bean
+	// Prevents Spring from creating a fallback dev user for the disabled built-in login flow.
+	public UserDetailsService userDetailsService() {
+		return username -> {
+			throw new UsernameNotFoundException("Built-in Spring Security login is disabled.");
+		};
+	}
+
+	@Bean
 	// Lets the Vite frontend call the backend with cookies during development.
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+		configuration.setAllowedOrigins(Arrays.stream(allowedOrigins.split(","))
+			.map(String::trim)
+			.filter(origin -> !origin.isEmpty())
+			.toList());
 		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		configuration.setAllowedHeaders(List.of("*"));
 		configuration.setAllowCredentials(true);

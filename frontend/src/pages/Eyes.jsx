@@ -239,7 +239,7 @@ const videoCards = [
     icon: '🥼',
     subTitle: 'ניתוחי פזילה',
     media: (
-      <video controls>
+      <video controls preload="metadata">
         <source src={largeVideo} type="video/mp4" />
       </video>
     ),

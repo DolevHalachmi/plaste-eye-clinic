@@ -1,0 +1,11 @@
+@import './base.css';
+@import './shared.css';
+@import './layout.css';
+@import './components/slider.css';
+@import './pages/home.css';
+@import './pages/aesthetic.css';
+@import './pages/eyes.css';
+@import './pages/team.css';
+@import './pages/blog.css';
+@import './pages/contact.css';
+@import './pages/clinic.css';
