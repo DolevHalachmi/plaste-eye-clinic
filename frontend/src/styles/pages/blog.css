@@ -143,8 +143,8 @@
 }
 
 .blog-feedback.success {
-  background: rgba(28, 125, 91, 0.12);
-  color: hsl(158, 57%, 28%);
+  background: rgba(28, 125, 91, 0.425);
+  color: hsl(158, 49%, 22%);
 }
 
 .blog-empty-state {

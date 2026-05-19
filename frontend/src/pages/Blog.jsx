@@ -214,7 +214,7 @@ export default function Blog() {
     setIsEditorOpen(true);
     setEditingPostId(null);
     setPostForm({
-      question: questionIdea.subject || questionIdea.comment,
+      question: questionIdea.comment,
       answer: '',
     });
     setEditorState({ loading: false, error: '', message: '' });
@@ -533,7 +533,7 @@ export default function Blog() {
               <input
                 type="text"
                 id="name"
-                placeholder="שם"
+                placeholder="(דרוש) שם"
                 name="name"
                 value={visitorForm.name}
                 onChange={handleVisitorChange}
@@ -570,7 +570,7 @@ export default function Blog() {
                 name="email"
                 value={visitorForm.email}
                 onChange={handleVisitorChange}
-                placeholder="md.halachmi@gmail.com"
+                placeholder="(דרוש) example@gmail.com"
                 required
               />
 
@@ -613,7 +613,7 @@ export default function Blog() {
                 rows="4"
                 cols="50"
                 onChange={handleVisitorChange}
-                placeholder="טקסט"
+                placeholder="(דרוש) טקסט"
                 name="comment"
                 value={visitorForm.comment}
                 required

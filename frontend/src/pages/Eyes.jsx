@@ -1,13 +1,13 @@
 import Slider from '../component/Slider';
 import VideoCard from '../component/VideoCard';
-import bgImage from '../assets/eyeImg/A2.jpg';
-import img1 from '../assets/eyeImg/image (5).png';
-import img2 from '../assets/eyeImg/image (6).png';
-import img3 from '../assets/eyeImg/image (7).png';
-import img4 from '../assets/eyeImg/image (8).png';
-import img5 from '../assets/eyeImg/image (9).png';
-import img6 from '../assets/eyeImg/image (10).png';
-import largeVideo from '../assets/eyeImg/large video.mp4';
+import bgImage from '../assets/eyeImg/A2.webp';
+import img1 from '../assets/eyeImg/image (5).webp';
+import img2 from '../assets/eyeImg/image (6).webp';
+import img3 from '../assets/eyeImg/image (7).webp';
+import img4 from '../assets/eyeImg/image (8).webp';
+import img5 from '../assets/eyeImg/image (9).webp';
+import img6 from '../assets/eyeImg/image (10).webp';
+import largeVideo from '../assets/eyeImg/large video.mobile.mp4';
 
 const slides = [
   { src: img1, alt: 'תוצאה 1' },
@@ -239,7 +239,7 @@ const videoCards = [
     icon: '🥼',
     subTitle: 'ניתוחי פזילה',
     media: (
-      <video controls preload="metadata">
+      <video controls playsInline preload="metadata">
         <source src={largeVideo} type="video/mp4" />
       </video>
     ),

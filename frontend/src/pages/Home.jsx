@@ -1,4 +1,4 @@
-import examinationImage from '../assets/Img/examination.JPG';
+import examinationImage from '../assets/Img/examination.webp';
 import surgeryImage from '../assets/Img/surgery.jpeg';
 
 export default function Home() {

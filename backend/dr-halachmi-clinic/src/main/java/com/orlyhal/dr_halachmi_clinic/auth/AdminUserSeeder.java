@@ -30,6 +30,10 @@ public class AdminUserSeeder implements CommandLineRunner {
 			return;
 		}
 
+		if (isBlank(adminSeedProperties.username()) || isBlank(adminSeedProperties.password())) {
+			return;
+		}
+
 		AdminUser adminUser = new AdminUser(
 			adminSeedProperties.username(),
 			passwordEncoder.encode(adminSeedProperties.password()),
@@ -37,5 +41,9 @@ public class AdminUserSeeder implements CommandLineRunner {
 		);
 
 		adminUserRepository.save(adminUser);
+	}
+
+	private boolean isBlank(String value) {
+		return value == null || value.isBlank();
 	}
 }

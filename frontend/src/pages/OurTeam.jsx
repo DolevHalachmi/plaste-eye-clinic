@@ -1,4 +1,4 @@
-import staffImage from '../assets/Img/staff.jpg';
+import staffImage from '../assets/Img/staff.webp';
 import img1 from '../assets/eyeImg/A3 (3).jpg';
 import img2 from '../assets/eyeImg/A3 (2).jpg';
 import img3 from '../assets/eyeImg/A3 (1).jpg';

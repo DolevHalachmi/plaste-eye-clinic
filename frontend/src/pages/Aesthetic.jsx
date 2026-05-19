@@ -1,10 +1,10 @@
 import Slider from '../component/Slider';
-import bgImage from '../assets/aestheticImg/B5 1.jpg';
-import video1 from '../assets/aestheticImg/anesthetic page video.mp4';
-import video2 from '../assets/aestheticImg/B7.mp4';
-import img1 from '../assets/aestheticImg/image (5).png';
-import img2 from '../assets/aestheticImg/image (6).png';
-import img3 from '../assets/aestheticImg/image (7).png';
+import bgImage from '../assets/aestheticImg/B5 1.webp';
+import video1 from '../assets/aestheticImg/anesthetic page video.optimized.mp4';
+import video2 from '../assets/aestheticImg/B7.optimized.mp4';
+import img1 from '../assets/aestheticImg/image (5).webp';
+import img2 from '../assets/aestheticImg/image (6).webp';
+import img3 from '../assets/aestheticImg/image (7).webp';
 import img4 from '../assets/aestheticImg/image (8).jpg';
 import img5 from '../assets/aestheticImg/image (9).jpg';
 
@@ -39,8 +39,8 @@ export default function Aesthetic() {
       <Slider slides={slides} interval={4000} />
 
       <section className="video-aesthetic">
-        <video id="video-aesthetic1" controls muted preload="metadata" src={video1} />
-        <video id="video-aesthetic2" controls muted preload="metadata" src={video2} />
+        <video id="video-aesthetic1" controls muted playsInline preload="metadata" src={video1} />
+        <video id="video-aesthetic2" controls muted playsInline preload="metadata" src={video2} />
       </section>
 
       <section className="aesthetic-treatments-section">

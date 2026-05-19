@@ -24,15 +24,19 @@ export default function Footer({ onNavigate }) {
         </article>
 
         <article className="footer-card footer-card-action">
-          <h3>לתיאום תור</h3>
-          <p>לקישור ולאפשרויות יצירת קשר עברו לדף צור קשר.</p>
-          <button
+          <h3>לאתר קביעת תורים אונליין</h3>
+           <button
             type="button"
             id="footer-btn"
             className="footer-link-button"
-            onClick={() => onNavigate('contact')}
+            onClick={() =>
+              window.open(
+                'https://www.rofim.org.il/minisite/%D7%93%D7%A8_%D7%94%D7%9C%D7%97%D7%9E%D7%99-%D7%90%D7%99%D7%99%D7%9C_%D7%90%D7%95%D7%A8%D7%9C%D7%99',
+                '_blank'
+              )
+            }
           >
-            צור קשר
+            אתר קביעת תורים
           </button>
         </article>
       </div>

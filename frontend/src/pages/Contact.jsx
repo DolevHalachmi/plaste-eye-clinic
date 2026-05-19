@@ -1,4 +1,4 @@
-import bgImage from '../assets/Img/orly-with-logo.JPG'; 
+import bgImage from '../assets/Img/orly-with-logo.webp'; 
 import appImg from '../assets/Img/appImg.png';
 export default function Contact() {
   return (
