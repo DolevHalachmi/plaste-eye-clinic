@@ -26,6 +26,9 @@ public class BlogPost {
 	@Column(nullable = false, columnDefinition = "TEXT")
 	private String answer;
 
+	@Column
+	private Long sourceQuestionId;
+
 	@Column(nullable = false, updatable = false)
 	private Instant createdAt;
 
@@ -36,15 +39,17 @@ public class BlogPost {
 	}
 
 	// Creates a new published card with its question and answer.
-	public BlogPost(String question, String answer) {
+	public BlogPost(String question, String answer, Long sourceQuestionId) {
 		this.question = question;
 		this.answer = answer;
+		this.sourceQuestionId = sourceQuestionId;
 	}
 
 	// Replaces the public text when the admin edits a card.
-	public void update(String question, String answer) {
+	public void update(String question, String answer, Long sourceQuestionId) {
 		this.question = question;
 		this.answer = answer;
+		this.sourceQuestionId = sourceQuestionId;
 	}
 
 	@PrePersist
@@ -71,6 +76,10 @@ public class BlogPost {
 
 	public String getAnswer() {
 		return answer;
+	}
+
+	public Long getSourceQuestionId() {
+		return sourceQuestionId;
 	}
 
 	public Instant getCreatedAt() {

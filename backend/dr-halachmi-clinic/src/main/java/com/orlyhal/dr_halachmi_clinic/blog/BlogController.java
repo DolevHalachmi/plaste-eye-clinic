@@ -26,11 +26,17 @@ public class BlogController {
 
 	private final BlogPostRepository blogPostRepository;
 	private final BlogQuestionRepository blogQuestionRepository;
+	private final QuestionAnswerNotificationService notificationService;
 
 	// Injects the repositories used by the public blog and admin tools.
-	public BlogController(BlogPostRepository blogPostRepository, BlogQuestionRepository blogQuestionRepository) {
+	public BlogController(
+		BlogPostRepository blogPostRepository,
+		BlogQuestionRepository blogQuestionRepository,
+		QuestionAnswerNotificationService notificationService
+	) {
 		this.blogPostRepository = blogPostRepository;
 		this.blogQuestionRepository = blogQuestionRepository;
+		this.notificationService = notificationService;
 	}
 
 	// Returns the published blog cards in newest-updated-first order.
@@ -55,7 +61,7 @@ public class BlogController {
 
 		blogQuestionRepository.save(question);
 		return ResponseEntity.status(HttpStatus.CREATED)
-			.body(new BlogMessageResponse(true, "השאלה נשמרה ונשלחה למנהלת הבלוג."));
+			.body(new BlogMessageResponse(true, "Your question was saved successfully."));
 	}
 
 	// Returns the admin-only list of submitted questions.
@@ -80,8 +86,19 @@ public class BlogController {
 			return unauthorized();
 		}
 
-		BlogPost post = blogPostRepository.save(new BlogPost(clean(request.question()), clean(request.answer())));
-		return ResponseEntity.status(HttpStatus.CREATED).body(BlogPostResponse.from(post));
+		ResponseEntity<BlogMessageResponse> questionConflict = validateQuestionLink(request.sourceQuestionId(), null);
+		if (questionConflict != null) {
+			return questionConflict;
+		}
+
+		BlogPost post = blogPostRepository.save(new BlogPost(
+			clean(request.question()),
+			clean(request.answer()),
+			request.sourceQuestionId()
+		));
+		String message = finalizeLinkedQuestion(post, request.sourceQuestionId());
+		return ResponseEntity.status(HttpStatus.CREATED)
+			.body(new BlogPostMutationResponse(BlogPostResponse.from(post), message));
 	}
 
 	// Updates an existing blog card by id.
@@ -97,12 +114,21 @@ public class BlogController {
 
 		return blogPostRepository.findById(id)
 			.<ResponseEntity<?>>map(post -> {
-				post.update(clean(request.question()), clean(request.answer()));
+				Long sourceQuestionId = post.getSourceQuestionId() != null
+					? post.getSourceQuestionId()
+					: request.sourceQuestionId();
+				ResponseEntity<BlogMessageResponse> questionConflict = validateQuestionLink(sourceQuestionId, post.getId());
+				if (questionConflict != null) {
+					return questionConflict;
+				}
+
+				post.update(clean(request.question()), clean(request.answer()), sourceQuestionId);
 				blogPostRepository.save(post);
-				return ResponseEntity.ok(BlogPostResponse.from(post));
+				String message = finalizeLinkedQuestion(post, sourceQuestionId);
+				return ResponseEntity.ok(new BlogPostMutationResponse(BlogPostResponse.from(post), message));
 			})
 			.orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
-				.body(new BlogMessageResponse(false, "כרטיס הבלוג לא נמצא.")));
+				.body(new BlogMessageResponse(false, "The requested blog post was not found.")));
 	}
 
 	// Deletes a published blog card by id.
@@ -114,11 +140,11 @@ public class BlogController {
 
 		if (!blogPostRepository.existsById(id)) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-				.body(new BlogMessageResponse(false, "כרטיס הבלוג לא נמצא."));
+				.body(new BlogMessageResponse(false, "The requested blog post was not found."));
 		}
 
 		blogPostRepository.deleteById(id);
-		return ResponseEntity.ok(new BlogMessageResponse(true, "כרטיס הבלוג נמחק."));
+		return ResponseEntity.ok(new BlogMessageResponse(true, "The blog post was deleted."));
 	}
 
 	// Deletes a saved visitor question from the idea list.
@@ -130,11 +156,11 @@ public class BlogController {
 
 		if (!blogQuestionRepository.existsById(id)) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-				.body(new BlogMessageResponse(false, "השאלה לא נמצאה."));
+				.body(new BlogMessageResponse(false, "The requested question was not found."));
 		}
 
 		blogQuestionRepository.deleteById(id);
-		return ResponseEntity.ok(new BlogMessageResponse(true, "השאלה נמחקה ממאגר הרעיונות."));
+		return ResponseEntity.ok(new BlogMessageResponse(true, "The saved question was deleted."));
 	}
 
 	// Reuses the clinic login so blog management shares the same admin session.
@@ -145,7 +171,53 @@ public class BlogController {
 	// Builds a standard 401 response for admin-only actions.
 	private ResponseEntity<BlogMessageResponse> unauthorized() {
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-			.body(new BlogMessageResponse(false, "נדרשת התחברות מנהל כדי לבצע את הפעולה הזאת."));
+			.body(new BlogMessageResponse(false, "Admin login is required for this action."));
+	}
+
+	private ResponseEntity<BlogMessageResponse> validateQuestionLink(Long sourceQuestionId, Long currentPostId) {
+		if (sourceQuestionId == null) {
+			return null;
+		}
+
+		if (!blogQuestionRepository.existsById(sourceQuestionId)) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body(new BlogMessageResponse(false, "The selected visitor question no longer exists."));
+		}
+
+		boolean alreadyLinked = currentPostId == null
+			? blogPostRepository.existsBySourceQuestionId(sourceQuestionId)
+			: blogPostRepository.existsBySourceQuestionIdAndIdNot(sourceQuestionId, currentPostId);
+		if (alreadyLinked) {
+			return ResponseEntity.status(HttpStatus.CONFLICT)
+				.body(new BlogMessageResponse(false, "This visitor question is already linked to another blog post."));
+		}
+
+		return null;
+	}
+
+	private String finalizeLinkedQuestion(BlogPost post, Long sourceQuestionId) {
+		if (sourceQuestionId == null) {
+			return "The blog post was saved successfully.";
+		}
+
+		return blogQuestionRepository.findById(sourceQuestionId)
+			.map(question -> {
+				question.linkAnsweredPost(post.getId());
+
+				String message = "The blog post was saved and linked to the visitor question.";
+				if (question.getAnswerNotificationSentAt() == null) {
+					QuestionAnswerNotificationService.DeliveryResult deliveryResult =
+						notificationService.sendAnswerNotification(question, post);
+					if (deliveryResult.sent()) {
+						question.markAnswerNotificationSent();
+					}
+					message = deliveryResult.message();
+				}
+
+				blogQuestionRepository.save(question);
+				return message;
+			})
+			.orElse("The blog post was saved, but the original question could not be linked.");
 	}
 
 	// Trims required strings before saving them.
@@ -164,27 +236,28 @@ public class BlogController {
 	}
 
 	public record BlogPostRequest(
-		@NotBlank(message = "יש להזין שאלה")
-		@Size(max = 300, message = "השאלה ארוכה מדי")
+		@NotBlank(message = "Please enter a question.")
+		@Size(max = 300, message = "The question is too long.")
 		String question,
-		@NotBlank(message = "יש להזין תשובה")
-		String answer
+		@NotBlank(message = "Please enter an answer.")
+		String answer,
+		Long sourceQuestionId
 	) {
 	}
 
 	public record BlogQuestionRequest(
-		@NotBlank(message = "יש להזין שם")
-		@Size(max = 120, message = "השם ארוך מדי")
+		@NotBlank(message = "Please enter a name.")
+		@Size(max = 120, message = "The name is too long.")
 		String name,
-		@Size(max = 40, message = "מספר הטלפון ארוך מדי")
+		@Size(max = 40, message = "The phone number is too long.")
 		String phone,
-		@NotBlank(message = "יש להזין אימייל")
-		@Email(message = "כתובת האימייל לא תקינה")
-		@Size(max = 160, message = "כתובת האימייל ארוכה מדי")
+		@NotBlank(message = "Please enter an email address.")
+		@Email(message = "Please enter a valid email address.")
+		@Size(max = 160, message = "The email address is too long.")
 		String email,
-		@Size(max = 200, message = "הנושא ארוך מדי")
+		@Size(max = 200, message = "The subject is too long.")
 		String subject,
-		@NotBlank(message = "יש להזין את תוכן השאלה")
+		@NotBlank(message = "Please enter your question.")
 		String comment
 	) {
 	}
@@ -193,6 +266,7 @@ public class BlogController {
 		Long id,
 		String question,
 		String answer,
+		Long sourceQuestionId,
 		Instant createdAt,
 		Instant updatedAt
 	) {
@@ -202,6 +276,7 @@ public class BlogController {
 				post.getId(),
 				post.getQuestion(),
 				post.getAnswer(),
+				post.getSourceQuestionId(),
 				post.getCreatedAt(),
 				post.getUpdatedAt()
 			);
@@ -215,6 +290,8 @@ public class BlogController {
 		String email,
 		String subject,
 		String comment,
+		Long answeredPostId,
+		Instant answerNotificationSentAt,
 		Instant createdAt
 	) {
 		// Maps the entity into the smaller response used by the frontend.
@@ -226,9 +303,14 @@ public class BlogController {
 				question.getEmail(),
 				question.getSubject(),
 				question.getComment(),
+				question.getAnsweredPostId(),
+				question.getAnswerNotificationSentAt(),
 				question.getCreatedAt()
 			);
 		}
+	}
+
+	public record BlogPostMutationResponse(BlogPostResponse post, String message) {
 	}
 
 	public record BlogMessageResponse(boolean success, String message) {

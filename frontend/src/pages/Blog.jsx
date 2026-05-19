@@ -11,6 +11,7 @@ const emptyVisitorForm = {
 const emptyPostForm = {
   question: '',
   answer: '',
+  sourceQuestionId: null,
 };
 
 // Reads JSON safely even when the backend returns an empty body.
@@ -19,13 +20,13 @@ async function readJson(response) {
   return text ? JSON.parse(text) : {};
 }
 
-// Formats backend timestamps for the Hebrew admin UI.
+// Formats backend timestamps for the admin UI.
 function formatDate(value) {
   if (!value) {
     return '';
   }
 
-  return new Intl.DateTimeFormat('he-IL', {
+  return new Intl.DateTimeFormat('en-IL', {
     dateStyle: 'medium',
     timeStyle: 'short',
   }).format(new Date(value));
@@ -65,7 +66,7 @@ export default function Blog() {
       setQuestionIdeas([]);
       setIdeasState({
         loading: false,
-        error: 'לא הצלחנו לטעון את מאגר השאלות של המנהלת כרגע.',
+        error: 'We could not load the saved visitor questions right now.',
       });
     }
   }, []);
@@ -110,7 +111,7 @@ export default function Blog() {
       setPosts([]);
       setPostsState({
         loading: false,
-        error: 'לא הצלחנו לטעון את הבלוג כרגע. נסו לרענן שוב בעוד רגע.',
+        error: 'We could not load the blog right now. Please refresh and try again.',
       });
     }
   }, []);
@@ -157,7 +158,7 @@ export default function Blog() {
       if (!response.ok) {
         setVisitorState({
           loading: false,
-          error: data.message ?? 'לא הצלחנו לשמור את השאלה. נסו שוב.',
+          error: data.message ?? 'We could not save your question. Please try again.',
           message: '',
         });
         return;
@@ -167,7 +168,7 @@ export default function Blog() {
       setVisitorState({
         loading: false,
         error: '',
-        message: data.message ?? 'השאלה נשלחה בהצלחה.',
+        message: data.message ?? 'Your question was sent successfully.',
       });
 
       if (admin) {
@@ -176,7 +177,7 @@ export default function Blog() {
     } catch {
       setVisitorState({
         loading: false,
-        error: 'השליחה נכשלה כרגע. בדקו שהשרת פועל ונסו שוב.',
+        error: 'Submission failed right now. Please make sure the server is running and try again.',
         message: '',
       });
     }
@@ -197,6 +198,7 @@ export default function Blog() {
     setPostForm({
       question: post.question,
       answer: post.answer,
+      sourceQuestionId: post.sourceQuestionId ?? null,
     });
     setEditorState({ loading: false, error: '', message: '' });
   }
@@ -214,8 +216,9 @@ export default function Blog() {
     setIsEditorOpen(true);
     setEditingPostId(null);
     setPostForm({
-      question: questionIdea.comment,
+      question: questionIdea.comment || questionIdea.subject,
       answer: '',
+      sourceQuestionId: questionIdea.id,
     });
     setEditorState({ loading: false, error: '', message: '' });
   }
@@ -243,23 +246,24 @@ export default function Blog() {
       if (!response.ok) {
         setEditorState({
           loading: false,
-          error: data.message ?? 'שמירת הפוסט נכשלה. נסו שוב.',
+          error: data.message ?? 'Saving the blog post failed. Please try again.',
           message: '',
         });
         return;
       }
 
       await loadPosts();
+      await loadQuestionIdeas();
       closeEditor();
       setEditorState({
         loading: false,
         error: '',
-        message: editingPostId ? 'כרטיס הבלוג עודכן.' : 'כרטיס בלוג חדש פורסם.',
+        message: data.message ?? (editingPostId ? 'The blog card was updated.' : 'A new blog card was published.'),
       });
     } catch {
       setEditorState({
         loading: false,
-        error: 'לא הצלחנו לשמור את הפוסט כרגע.',
+        error: 'We could not save the blog post right now.',
         message: '',
       });
     }
@@ -267,7 +271,7 @@ export default function Blog() {
 
   // Removes a published blog card after an admin confirmation.
   async function handleDeletePost(postId) {
-    if (!window.confirm('למחוק את כרטיס הבלוג הזה?')) {
+    if (!window.confirm('Delete this blog card?')) {
       return;
     }
 
@@ -283,7 +287,7 @@ export default function Blog() {
       if (!response.ok) {
         setEditorState({
           loading: false,
-          error: data.message ?? 'מחיקת הכרטיס נכשלה.',
+          error: data.message ?? 'Deleting the card failed.',
           message: '',
         });
         return;
@@ -297,12 +301,12 @@ export default function Blog() {
       setEditorState({
         loading: false,
         error: '',
-        message: data.message ?? 'כרטיס הבלוג נמחק.',
+        message: data.message ?? 'The blog card was deleted.',
       });
     } catch {
       setEditorState({
         loading: false,
-        error: 'לא הצלחנו למחוק את הכרטיס כרגע.',
+        error: 'We could not delete the card right now.',
         message: '',
       });
     }
@@ -310,7 +314,7 @@ export default function Blog() {
 
   // Removes a submitted visitor question from the admin idea list.
   async function handleDeleteQuestion(questionId) {
-    if (!window.confirm('למחוק את השאלה ממאגר הרעיונות?')) {
+    if (!window.confirm('Delete this visitor question from the idea list?')) {
       return;
     }
 
@@ -330,7 +334,7 @@ export default function Blog() {
       if (!response.ok) {
         setIdeasState({
           loading: false,
-          error: data.message ?? 'מחיקת השאלה נכשלה.',
+          error: data.message ?? 'Deleting the question failed.',
         });
         return;
       }
@@ -339,7 +343,7 @@ export default function Blog() {
     } catch {
       setIdeasState({
         loading: false,
-        error: 'לא הצלחנו למחוק את השאלה כרגע.',
+        error: 'We could not delete the question right now.',
       });
     }
   }
@@ -350,15 +354,15 @@ export default function Blog() {
         <div className="blog-header">
           <h1>בלוג שאלות ותשובות</h1>
           <p>
-            כאן תמצאו תשובות לשאלות נפוצות, ובמידת הצורך תוכלו גם להשאיר שאלה חדשה כדי
-            שהמנהלת תוכל להפוך אותה בעתיד לפוסט נוסף.
+            כאן יכולים מבקרים לקרוא תשובות לשאלות נפוצות ולהשאיר שאלה חדשה לצוות המרפאה לבדיקה
+            ונחזור אליכם עם תשובה במייל
           </p>
 
           {admin ? (
             <div className="blog-admin-bar">
-              <span className="blog-admin-pill">מחובר/ת כמנהל/ת: {admin.displayName}</span>
+              <span className="blog-admin-pill">Logged in as admin: {admin.displayName}</span>
               <button type="button" className="blog-primary-button" onClick={openNewPostEditor}>
-                פוסט חדש
+                New post
               </button>
             </div>
           ) : null}
@@ -366,10 +370,16 @@ export default function Blog() {
 
         {isEditorOpen ? (
           <form className="content-card blog-admin-editor" onSubmit={handlePostSubmit}>
-            <h2>{editingPostId ? 'עריכת כרטיס בלוג' : 'כרטיס בלוג חדש'}</h2>
+            <h2>{editingPostId ? 'Edit blog card' : 'New blog card'}</h2>
+            {postForm.sourceQuestionId ? (
+              <p className="blog-meta">
+                This post is linked to a visitor question. Saving it will send the answer email if one has not already
+                been sent for this question.
+              </p>
+            ) : null}
             <div className="blog-editor-grid">
               <label>
-                <span>שאלה</span>
+                <span>Question</span>
                 <input
                   type="text"
                   name="question"
@@ -381,7 +391,7 @@ export default function Blog() {
               </label>
 
               <label>
-                <span>תשובה</span>
+                <span>Answer</span>
                 <textarea
                   name="answer"
                   rows="6"
@@ -394,10 +404,10 @@ export default function Blog() {
 
             <div className="blog-editor-actions">
               <button type="submit" className="blog-primary-button" disabled={editorState.loading}>
-                {editorState.loading ? 'שומר...' : editingPostId ? 'שמור שינויים' : 'פרסם פוסט'}
+                {editorState.loading ? 'Saving...' : editingPostId ? 'Save changes' : 'Publish post'}
               </button>
               <button type="button" className="blog-secondary-button" onClick={closeEditor}>
-                ביטול
+                Cancel
               </button>
             </div>
           </form>
@@ -413,13 +423,13 @@ export default function Blog() {
         <div className="faq-list">
           {postsState.loading ? (
             <article className="content-card faq-item blog-empty-state">
-              <p>טוענים את הפוסטים...</p>
+              <p>Loading posts...</p>
             </article>
           ) : null}
 
           {!postsState.loading && !posts.length ? (
             <article className="content-card faq-item blog-empty-state">
-              <p>עדיין אין פוסטים בבלוג.</p>
+              <p>No blog posts have been published yet.</p>
             </article>
           ) : null}
 
@@ -429,7 +439,7 @@ export default function Blog() {
                 <div>
                   <h3>{post.question}</h3>
                   {post.updatedAt ? (
-                    <p className="blog-meta">עודכן לאחרונה: {formatDate(post.updatedAt)}</p>
+                    <p className="blog-meta">Updated: {formatDate(post.updatedAt)}</p>
                   ) : null}
                 </div>
 
@@ -440,14 +450,14 @@ export default function Blog() {
                       className="blog-secondary-button"
                       onClick={() => openEditPostEditor(post)}
                     >
-                      עריכה
+                      Edit
                     </button>
                     <button
                       type="button"
                       className="blog-danger-button"
                       onClick={() => handleDeletePost(post.id)}
                     >
-                      מחיקה
+                      Delete
                     </button>
                   </div>
                 ) : null}
@@ -460,8 +470,8 @@ export default function Blog() {
         {admin ? (
           <section className="blog-idea-section">
             <div className="blog-header">
-              <h2>מאגר שאלות מהאתר</h2>
-              <p>השאלות האלו נשמרות במסד הנתונים ומוצגות לפי סדר קבלתן כדי לתת רעיונות לפוסטים חדשים.</p>
+              <h2>Visitor question inbox</h2>
+              <p>Questions submitted from the site are stored here so the clinic can turn them into future posts.</p>
             </div>
 
             {ideasState.error ? <p className="blog-feedback error">{ideasState.error}</p> : null}
@@ -469,39 +479,47 @@ export default function Blog() {
             <div className="blog-idea-list">
               {ideasState.loading && !questionIdeas.length ? (
                 <article className="content-card blog-idea-card">
-                  <p>טוענים שאלות מהמסד...</p>
+                  <p>Loading saved questions...</p>
                 </article>
               ) : null}
 
               {!ideasState.loading && !questionIdeas.length ? (
                 <article className="content-card blog-idea-card">
-                  <p>עדיין לא נשמרו שאלות חדשות מהגולשים.</p>
+                  <p>No visitor questions have been saved yet.</p>
                 </article>
               ) : null}
 
               {questionIdeas.map((questionIdea) => (
                 <article key={questionIdea.id} className="content-card blog-idea-card">
-                  <h3>{questionIdea.subject || 'שאלה ללא נושא'}</h3>
+                  <h3>{questionIdea.subject || 'Question without a subject'}</h3>
                   <p className="blog-meta">
                     {questionIdea.name} | {questionIdea.email}
                     {questionIdea.phone ? ` | ${questionIdea.phone}` : ''}
                   </p>
-                  <p className="blog-meta">התקבלה: {formatDate(questionIdea.createdAt)}</p>
+                  <p className="blog-meta">Received: {formatDate(questionIdea.createdAt)}</p>
+                  {questionIdea.answeredPostId ? (
+                    <p className="blog-meta">
+                      {questionIdea.answerNotificationSentAt
+                        ? 'This question has already been answered and the email notification was sent.'
+                        : 'This question has already been answered on the site, but no email send was recorded yet.'}
+                    </p>
+                  ) : null}
                   <p>{questionIdea.comment}</p>
                   <div className="blog-idea-actions">
                     <button
                       type="button"
                       className="blog-primary-button"
                       onClick={() => fillEditorFromQuestionIdea(questionIdea)}
+                      disabled={Boolean(questionIdea.answeredPostId)}
                     >
-                      השתמשי כרעיון לפוסט
+                      {questionIdea.answeredPostId ? 'Already answered' : 'Use as post idea'}
                     </button>
                     <button
                       type="button"
                       className="blog-danger-button"
                       onClick={() => handleDeleteQuestion(questionIdea.id)}
                     >
-                      מחקי שאלה
+                      Delete question
                     </button>
                   </div>
                 </article>
@@ -533,7 +551,7 @@ export default function Blog() {
               <input
                 type="text"
                 id="name"
-                placeholder="(דרוש) שם"
+                placeholder="שם (דרוש)"
                 name="name"
                 value={visitorForm.name}
                 onChange={handleVisitorChange}
@@ -570,7 +588,7 @@ export default function Blog() {
                 name="email"
                 value={visitorForm.email}
                 onChange={handleVisitorChange}
-                placeholder="(דרוש) example@gmail.com"
+                placeholder="example@gmail.com (דרוש)"
                 required
               />
 
@@ -588,7 +606,7 @@ export default function Blog() {
               <input
                 type="text"
                 id="subject"
-                placeholder="נושא"
+                placeholder="Subject"
                 onChange={handleVisitorChange}
                 name="subject"
                 value={visitorForm.subject}
@@ -613,23 +631,18 @@ export default function Blog() {
                 rows="4"
                 cols="50"
                 onChange={handleVisitorChange}
-                placeholder="(דרוש) טקסט"
+                placeholder="טקסט שאלה (דרוש)"
                 name="comment"
                 value={visitorForm.comment}
                 required
               />
             </div>
 
-            <input
-              type="button"
-              value="לנקות"
-              id="resetBtn"
-              onClick={() => setVisitorForm(emptyVisitorForm)}
-            />
+            <input type="button" value="Clear" id="resetBtn" onClick={() => setVisitorForm(emptyVisitorForm)} />
             <br />
             <input
               type="submit"
-              value={visitorState.loading ? 'שולח...' : 'לשלוח'}
+              value={visitorState.loading ? 'Sending...' : 'Send'}
               id="submitBtn"
               disabled={visitorState.loading}
             />

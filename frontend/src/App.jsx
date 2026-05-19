@@ -1,5 +1,7 @@
-import { Suspense, lazy, useMemo, useState } from 'react';
+import { Suspense, lazy, useEffect, useMemo, useState } from 'react';
 import Layout from './component/Layout';
+import { resolveLegacyHashPath, resolveRoute, routesByKey } from './siteConfig';
+import { usePageSeo } from './usePageSeo';
 
 const HomePage = lazy(() => import('./pages/Home'));
 const AestheticPage = lazy(() => import('./pages/Aesthetic'));
@@ -17,31 +19,66 @@ const pageComponents = {
   blog: BlogPage,
   contact: ContactPage,
   clinic: ClinicPage,
+  notFound: NotFoundPage,
 };
 
+function buildInitialRoute() {
+  const legacyPath = resolveLegacyHashPath(window.location.hash);
+  if (legacyPath) {
+    window.history.replaceState({}, '', legacyPath);
+  }
+
+  return resolveRoute(window.location.pathname);
+}
+
+function NotFoundPage() {
+  return (
+    <section className="simple-page page-loading">
+      <div className="content-card">
+        <h1>Page not found</h1>
+        <p>The page you requested does not exist. Please use the main navigation to continue browsing the clinic site.</p>
+      </div>
+    </section>
+  );
+}
+
 export default function App() {
-  const initialPage = useMemo(() => {
-    const hash = window.location.hash.replace('#', '');
-    return hash || 'home';
+  const initialRoute = useMemo(buildInitialRoute, []);
+  const [route, setRoute] = useState(initialRoute);
+
+  usePageSeo(route);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setRoute(resolveRoute(window.location.pathname));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  const [page, setPage] = useState(initialPage);
+  const navigate = (nextPage, options = {}) => {
+    const nextRoute = routesByKey[nextPage] ?? resolveRoute(nextPage);
+    const method = options.replace ? 'replaceState' : 'pushState';
 
-  const navigate = (nextPage) => {
-    window.location.hash = nextPage;
-    setPage(nextPage);
+    if (window.location.pathname !== nextRoute.path) {
+      window.history[method]({}, '', nextRoute.path);
+    }
+
+    setRoute(nextRoute);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const CurrentPage = pageComponents[page] ?? HomePage;
+  const CurrentPage = pageComponents[route.key] ?? HomePage;
 
   return (
-    <Layout currentPage={page} onNavigate={navigate}>
+    <Layout currentPage={route.key} onNavigate={navigate}>
       <Suspense
         fallback={
           <section className="simple-page page-loading">
             <div className="content-card">
-              <p>טוענים את הדף...</p>
+              <p>Loading page...</p>
             </div>
           </section>
         }

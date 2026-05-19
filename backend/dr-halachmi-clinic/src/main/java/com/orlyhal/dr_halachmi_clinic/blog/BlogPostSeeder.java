@@ -25,16 +25,19 @@ public class BlogPostSeeder implements CommandLineRunner {
 
 		blogPostRepository.saveAll(List.of(
 			new BlogPost(
-				"מתי כדאי לפנות לבדיקת פזילה?",
-				"כאשר מופיעה סטייה בעיניים, תלונות על ראייה כפולה או חשד מצד ההורים."
+				"When should I schedule an eye exam for suspected strabismus?",
+				"When you notice eye misalignment, double vision complaints, or a concern raised by the parents.",
+				null
 			),
 			new BlogPost(
-				"האם כל פזילה מחייבת ניתוח?",
-				"לא. בחלק מהמקרים ניתן לטפל במשקפיים, סגירות עין או מעקב מסודר."
+				"Does every strabismus case require surgery?",
+				"No. Some cases can be treated with glasses, patching, or a structured follow-up plan.",
+				null
 			),
 			new BlogPost(
-				"מה היתרון בגישה אסתטית טבעית?",
-				"התאמת הטיפול למבנה הפנים כך שהתוצאה תישאר עדינה והרמונית."
+				"What is the benefit of a natural aesthetic approach?",
+				"It tailors the treatment to the patient's facial structure so the result stays subtle and balanced.",
+				null
 			)
 		));
 	}

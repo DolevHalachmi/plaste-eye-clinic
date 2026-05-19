@@ -212,6 +212,11 @@ footer {
 }
 
 @media (max-width: 700px) {
+  .nav-inner {
+    display: grid;
+    gap: 0.75rem;
+  }
+
   .site-nav {
     padding: 0.75rem;
   }

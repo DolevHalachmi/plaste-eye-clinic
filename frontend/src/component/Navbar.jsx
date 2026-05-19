@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import homeIcon from '../assets/emoji/house-solid-full.svg';
 import eyeLogo from '../assets/Img/eyelogo_removedBackground.png';
+import { routesByKey } from '../siteConfig';
 
 const navItems = [
   { key: 'home', label: <img id="home-icon" src={homeIcon} alt="home" /> },
@@ -41,17 +42,18 @@ export default function Navbar({ currentPage, onNavigate }) {
           aria-label="Primary"
         >
           {navItems.map((item) => (
-            <button
+            <a
               key={item.key}
-              type="button"
+              href={routesByKey[item.key].path}
               className={`nav-link ${currentPage === item.key ? 'active' : ''}`}
-              onClick={() => {
+              onClick={(event) => {
+                event.preventDefault();
                 setIsMenuOpen(false);
                 onNavigate(item.key);
               }}
             >
               {item.label}
-            </button>
+            </a>
           ))}
         </div>
       </div>

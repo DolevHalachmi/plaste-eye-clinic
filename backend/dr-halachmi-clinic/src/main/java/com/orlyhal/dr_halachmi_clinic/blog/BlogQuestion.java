@@ -34,6 +34,12 @@ public class BlogQuestion {
 	@Column(nullable = false, columnDefinition = "TEXT")
 	private String comment;
 
+	@Column
+	private Long answeredPostId;
+
+	@Column
+	private Instant answerNotificationSentAt;
+
 	@Column(nullable = false, updatable = false)
 	private Instant createdAt;
 
@@ -79,7 +85,23 @@ public class BlogQuestion {
 		return comment;
 	}
 
+	public Long getAnsweredPostId() {
+		return answeredPostId;
+	}
+
+	public Instant getAnswerNotificationSentAt() {
+		return answerNotificationSentAt;
+	}
+
 	public Instant getCreatedAt() {
 		return createdAt;
+	}
+
+	public void linkAnsweredPost(Long postId) {
+		answeredPostId = postId;
+	}
+
+	public void markAnswerNotificationSent() {
+		answerNotificationSentAt = Instant.now();
 	}
 }
