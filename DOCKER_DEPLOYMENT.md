@@ -18,7 +18,7 @@ docker-compose logs -f
 # Services will be available at:
 # - Frontend: http://localhost:3000
 # - Backend API: http://localhost:8080
-# - Database: localhost:3306
+# - Database: localhost:5432
 ```
 
 ## Prerequisites
@@ -26,7 +26,7 @@ docker-compose logs -f
 - Docker 20.10+
 - Docker Compose 2.0+
 - At least 2GB RAM allocated to Docker
-- Ports 3000, 8080, 3306 available
+- Ports 3000, 8080, 5432 available
 
 ## Configuration
 
@@ -35,11 +35,11 @@ docker-compose logs -f
 Edit `.env` file to customize:
 
 ```bash
-# Database
-DB_ROOT_PASSWORD=rootpassword
+# Database (PostgreSQL)
 DB_NAME=dr_halachmi_clinic
 DB_USERNAME=clinic_user
 DB_PASSWORD=clinic_password
+DB_PORT=5432
 
 # Backend
 BACKEND_PORT=8080
@@ -82,7 +82,7 @@ docker-compose down -v
 docker-compose exec backend sh
 
 # Enter database shell
-docker-compose exec db mysql -u clinic_user -p dr_halachmi_clinic
+docker-compose exec db psql -U clinic_user dr_halachmi_clinic
 
 # Check service health
 docker-compose exec backend curl http://localhost:8080/actuator/health
@@ -94,7 +94,7 @@ Services include automatic health checks:
 
 - **Backend**: `GET /actuator/health` (port 8080)
 - **Frontend**: `GET /` (port 3000)
-- **Database**: MySQL ping health check
+- **Database**: PostgreSQL `pg_isready` health check
 
 ## Persistence
 
@@ -159,7 +159,7 @@ docker-compose ps db
 docker-compose logs db
 
 # Check database health
-docker-compose exec db mysqladmin ping -h localhost -u clinic_user -p
+docker-compose exec db pg_isready -U clinic_user
 ```
 
 ### Frontend API errors
@@ -194,12 +194,12 @@ docker-compose up -d --build frontend
 
 ### Export database
 ```bash
-docker-compose exec db mysqldump -u clinic_user -p dr_halachmi_clinic > backup.sql
+docker-compose exec db pg_dump -U clinic_user dr_halachmi_clinic > backup.sql
 ```
 
 ### Import database
 ```bash
-cat backup.sql | docker-compose exec -T db mysql -u clinic_user -p dr_halachmi_clinic
+cat backup.sql | docker-compose exec -T db psql -U clinic_user dr_halachmi_clinic
 ```
 
 ## Performance Tips

@@ -1,21 +1,20 @@
 version: '3.8'
 
 services:
-  # MySQL Database
+  # PostgreSQL Database
   db:
-    image: mysql:8.0
+    image: postgres:16-alpine
     container_name: plaste-db
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpassword}
-      MYSQL_DATABASE: ${DB_NAME:-dr_halachmi_clinic}
-      MYSQL_USER: ${DB_USERNAME:-clinic_user}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-clinic_password}
+      POSTGRES_DB: ${DB_NAME:-dr_halachmi_clinic}
+      POSTGRES_USER: ${DB_USERNAME:-clinic_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-clinic_password}
     ports:
-      - "${DB_PORT:-3306}:3306"
+      - "${DB_PORT:-5432}:5432"
     volumes:
-      - db_data:/var/lib/mysql
+      - db_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-clinic_user}"]
       timeout: 20s
       retries: 10
       interval: 10s
@@ -29,7 +28,7 @@ services:
       dockerfile: Dockerfile
     container_name: plaste-backend
     environment:
-      DB_URL: jdbc:mysql://db:3306/${DB_NAME:-dr_halachmi_clinic}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      DB_URL: jdbc:postgresql://db:5432/${DB_NAME:-dr_halachmi_clinic}
       DB_USERNAME: ${DB_USERNAME:-clinic_user}
       DB_PASSWORD: ${DB_PASSWORD:-clinic_password}
       PORT: 8080

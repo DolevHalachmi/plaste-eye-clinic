@@ -5,7 +5,7 @@ A modern clinic website with public pages, interactive Q&A blog, and admin dashb
 **Tech Stack:**
 - **Frontend**: React 19 + Vite
 - **Backend**: Spring Boot 4.0 + Java 21
-- **Database**: MySQL 8.0
+- **Database**: PostgreSQL 16
 - **Deployment**: Docker & Docker Compose (recommended) or local setup
 
 The site includes public clinic pages, contact form, Q&A blog system, and admin panel for content management.
@@ -72,7 +72,7 @@ docker-compose logs -f
 Services will be available at:
 - **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:8080
-- **Database**: localhost:3306
+- **Database**: localhost:5432
 
 See [DOCKER_DEPLOYMENT.md](DOCKER_DEPLOYMENT.md) for detailed Docker instructions.
 
@@ -82,22 +82,29 @@ See [DOCKER_DEPLOYMENT.md](DOCKER_DEPLOYMENT.md) for detailed Docker instruction
 - Java 21
 - Node.js 18+
 - npm or yarn
-- MySQL 8.0
+- PostgreSQL 12+
 
-**1. Create MySQL Database**
+**1. Create PostgreSQL Database**
 
 ```bash
-mysql -u root -p
+# Connect to PostgreSQL
+psql -U postgres
+
+# Create database and user
 CREATE DATABASE dr_halachmi_clinic;
-CREATE USER 'clinic_user'@'localhost' IDENTIFIED BY 'clinic_password';
-GRANT ALL PRIVILEGES ON dr_halachmi_clinic.* TO 'clinic_user'@'localhost';
-FLUSH PRIVILEGES;
+CREATE USER clinic_user WITH PASSWORD 'clinic_password';
+ALTER ROLE clinic_user SET client_encoding TO 'utf8';
+ALTER ROLE clinic_user SET default_transaction_isolation TO 'read committed';
+ALTER ROLE clinic_user SET default_transaction_deferrable TO on;
+ALTER ROLE clinic_user SET default_transaction_read_only TO off;
+GRANT ALL PRIVILEGES ON DATABASE dr_halachmi_clinic TO clinic_user;
+\q
 ```
 
 **2. Set Environment Variables**
 
 ```bash
-export DB_URL=jdbc:mysql://localhost:3306/dr_halachmi_clinic
+export DB_URL=jdbc:postgresql://localhost:5432/dr_halachmi_clinic
 export DB_USERNAME=clinic_user
 export DB_PASSWORD=clinic_password
 export ADMIN_USERNAME=admin
@@ -107,7 +114,7 @@ export ADMIN_PASSWORD=yourSecurePassword
 Or create `backend/dr-halachmi-clinic/src/main/resources/application-local.properties`:
 
 ```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/dr_halachmi_clinic
+spring.datasource.url=jdbc:postgresql://localhost:5432/dr_halachmi_clinic
 spring.datasource.username=clinic_user
 spring.datasource.password=clinic_password
 app.admin.seed.username=admin
@@ -181,7 +188,7 @@ Key configuration options:
 
 | Variable | Default | Purpose |
 |----------|---------|---------|
-| `DB_URL` | MySQL connection string | Database connection |
+| `DB_URL` | PostgreSQL connection string | Database connection |
 | `DB_USERNAME` | `clinic_user` | Database user |
 | `DB_PASSWORD` | `clinic_password` | Database password |
 | `ADMIN_USERNAME` | `admin` | Admin login username |
@@ -195,7 +202,7 @@ For production, use strong passwords and adjust CORS origins to your domain.
 ## Database Behavior
 
 - **Auto-initialization**: First startup creates tables and seeds initial admin user
-- **Data Persistence**: All data stored in MySQL (or Docker volume if using Docker)
+- **Data Persistence**: All data stored in PostgreSQL (or Docker volume if using Docker)
 - **Migrations**: JPA handles schema updates via `spring.jpa.hibernate.ddl-auto=update`
 - **Blog Posts**: Stored separately from visitor questions
 - **Sessions**: Admin login maintains HTTP session across page refreshes
@@ -331,7 +338,7 @@ docker-compose ps db
 docker-compose logs db
 
 # Test database connection
-docker-compose exec db mysql -u clinic_user -p -e "SELECT 1"
+docker-compose exec db psql -U clinic_user -d dr_halachmi_clinic -c "SELECT 1"
 ```
 
 **Frontend API errors:**
@@ -346,7 +353,7 @@ docker-compose exec frontend curl http://backend:8080/actuator/health
 
 **Backend won't start:**
 - Verify Java 21 is installed: `java -version`
-- Check MySQL is running
+- Check PostgreSQL is running
 - Verify database credentials in environment variables
 - View logs for detailed error messages
 
@@ -361,9 +368,9 @@ docker-compose exec frontend curl http://backend:8080/actuator/health
 - View backend logs for authentication errors
 
 **Database connection fails:**
-- Verify MySQL is running: `mysql -u root -p`
-- Check database exists: `SHOW DATABASES;`
-- Verify user has permissions: `SHOW GRANTS FOR 'clinic_user'@'localhost';`
+- Verify PostgreSQL is running: `psql -U postgres`
+- Check database exists: `\l` in psql
+- Verify user has permissions: `\du` in psql
 
 For more detailed troubleshooting, see [DOCKER_DEPLOYMENT.md](DOCKER_DEPLOYMENT.md).
 
@@ -372,7 +379,7 @@ For more detailed troubleshooting, see [DOCKER_DEPLOYMENT.md](DOCKER_DEPLOYMENT.
 ### Backend (Spring Boot)
 - REST API for blog, admin, and contact operations
 - JWT session management for admin authentication
-- MySQL database persistence
+- PostgreSQL database persistence
 - Email notifications (optional SMTP)
 - CORS configured for frontend origin
 - Health checks via Spring Actuator
@@ -384,7 +391,7 @@ For more detailed troubleshooting, see [DOCKER_DEPLOYMENT.md](DOCKER_DEPLOYMENT.
 - API client for backend communication
 - Responsive design for all screen sizes
 
-### Database (MySQL)
+### Database (PostgreSQL)
 - Stores blog posts and visitor questions
 - Admin user credentials
 - Automatic schema initialization on startup
