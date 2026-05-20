@@ -23,7 +23,7 @@ services:
       dockerfile: Dockerfile
     container_name: plaste-backend
     environment:
-      DB_URL: jdbc:postgresql://db:5432/dr_halachmi_clinic
+      DB_URL: ${DB_URL:-jdbc:postgresql://db:5432/dr_halachmi_clinic}
       DB_USERNAME: ${DB_USERNAME:-clinic_user}
       DB_PASSWORD: ${DB_PASSWORD} # <-- Matches the DB password above
       PORT: 8080
