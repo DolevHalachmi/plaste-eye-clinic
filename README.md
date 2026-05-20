@@ -41,9 +41,9 @@ The site uses hash-based navigation (#anchor routing):
 | `#clinic` | Admin login |
 
 **Example URLs:**
-- `http://localhost:3000/#home`
-- `http://localhost:3000/#blog`
-- `http://localhost:3000/#clinic` (admin login)
+- `http://localhost:5173/#home`
+- `http://localhost:5173/#blog`
+- `http://localhost:5173/#clinic` (admin login)
 
 ## Getting Started
 
@@ -70,7 +70,7 @@ docker-compose logs -f
 ```
 
 Services will be available at:
-- **Frontend**: http://localhost:3000
+- **Frontend**: http://localhost:5173
 - **Backend API**: http://localhost:8080
 - **Database**: localhost:5432
 
@@ -140,13 +140,13 @@ npm install
 npm run dev
 ```
 
-Frontend runs on: http://localhost:3000
+Frontend runs on: http://localhost:5173
 
 ## Using the Site
 
 ### For Visitors
 
-1. Open http://localhost:3000 (or your deployed URL)
+1. Open http://localhost:5173 (or your deployed URL)
 2. Browse sections via navigation menu
 3. Go to **Blog** to read Q&A posts
 4. Submit questions at the bottom of the blog page
@@ -193,9 +193,9 @@ Key configuration options:
 | `DB_PASSWORD` | `clinic_password` | Database password |
 | `ADMIN_USERNAME` | `admin` | Admin login username |
 | `ADMIN_PASSWORD` | `admin123` | Admin login password |
-| `APP_CORS_ALLOWED_ORIGINS` | `http://localhost:3000` | Frontend URL (backend CORS) |
+| `APP_CORS_ALLOWED_ORIGINS` | `http://localhost:5173` | Frontend URL (backend CORS) |
 | `BACKEND_PORT` | `8080` | Backend API port |
-| `FRONTEND_PORT` | `3000` | Frontend server port |
+| `FRONTEND_PORT` | `5173` | Frontend server port |
 
 For production, use strong passwords and adjust CORS origins to your domain.
 

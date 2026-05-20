@@ -16,7 +16,7 @@ docker-compose ps
 docker-compose logs -f
 
 # Services will be available at:
-# - Frontend: http://localhost:3000
+# - Frontend: http://localhost:5173
 # - Backend API: http://localhost:8080
 # - Database: localhost:5432
 ```
@@ -26,7 +26,7 @@ docker-compose logs -f
 - Docker 20.10+
 - Docker Compose 2.0+
 - At least 2GB RAM allocated to Docker
-- Ports 3000, 8080, 5432 available
+- Ports 5173, 8080, 5432 available
 
 ## Configuration
 
@@ -43,12 +43,12 @@ DB_PORT=5432
 
 # Backend
 BACKEND_PORT=8080
-APP_CORS_ALLOWED_ORIGINS=http://localhost:3000
+APP_CORS_ALLOWED_ORIGINS=http://localhost:5173
 ADMIN_USERNAME=admin
 ADMIN_PASSWORD=admin123
 
 # Frontend
-FRONTEND_PORT=3000
+FRONTEND_PORT=5173
 
 # Mail (optional)
 SPRING_MAIL_HOST=smtp.gmail.com
@@ -93,7 +93,7 @@ docker-compose exec backend curl http://localhost:8080/actuator/health
 Services include automatic health checks:
 
 - **Backend**: `GET /actuator/health` (port 8080)
-- **Frontend**: `GET /` (port 3000)
+- **Frontend**: `GET /` (port 5173)
 - **Database**: PostgreSQL `pg_isready` health check
 
 ## Persistence
