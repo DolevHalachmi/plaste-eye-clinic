@@ -1,221 +1,403 @@
 # Plaste Clinic Website
 
-This project is a clinic website built with:
+A modern clinic website with public pages, interactive Q&A blog, and admin dashboard for managing content.
 
-- `frontend/`: React + Vite
-- `backend/dr-halachmi-clinic/`: Spring Boot + PostgreSQL
+**Tech Stack:**
+- **Frontend**: React 19 + Vite
+- **Backend**: Spring Boot 4.0 + Java 21
+- **Database**: MySQL 8.0
+- **Deployment**: Docker & Docker Compose (recommended) or local setup
 
-The site includes public clinic pages, a contact experience, a Q&A blog, and an admin flow for managing blog posts.
+The site includes public clinic pages, contact form, Q&A blog system, and admin panel for content management.
 
-## What The Site Does
+## Features
 
-Visitors can:
+### Visitor Features
+- Browse clinic pages from navigation menu
+- Read published Q&A blog posts
+- Submit questions for clinic review
+- Contact clinic via contact form
 
-- browse the clinic pages from the top navigation
-- read blog question-and-answer cards
-- submit a new question from the blog page
-- use the contact page to reach the clinic
+### Admin Features
+- Secure login with session management
+- Create and publish blog Q&A posts
+- Edit existing blog content
+- Delete blog posts
+- Review visitor-submitted questions
+- Manage admin user account
 
-Admins can:
+## Navigation Structure
 
-- log in through the clinic/admin page
-- create new blog cards
-- edit existing blog cards
-- delete blog cards
-- review visitor-submitted questions as ideas for future posts
-- delete submitted questions from the admin idea list
+The site uses hash-based navigation (#anchor routing):
 
-## Site Navigation
+| Route | Page |
+|-------|------|
+| `#home` | Home page |
+| `#aesthetic` | Aesthetic treatments |
+| `#eyes` | Eye-related treatments |
+| `#team` | Clinic team |
+| `#blog` | Public Q&A blog & question form |
+| `#contact` | Contact page |
+| `#clinic` | Admin login |
 
-The site uses hash-based navigation, so each section opens inside the same frontend app.
+**Example URLs:**
+- `http://localhost:3000/#home`
+- `http://localhost:3000/#blog`
+- `http://localhost:3000/#clinic` (admin login)
 
-Main sections:
+## Getting Started
 
-- `#home` - home page
-- `#aesthetic` - aesthetic treatments
-- `#eyes` - eye-related treatments
-- `#team` - clinic team page
-- `#blog` - public blog and question form
-- `#contact` - contact page
-- `#clinic` - admin login page
+### Option 1: Docker (Recommended) 🐳
 
-Example local URLs:
+**Prerequisites:**
+- Docker 20.10+
+- Docker Compose 2.0+
 
-- `http://localhost:5173/#home`
-- `http://localhost:5173/#blog`
-- `http://localhost:5173/#clinic`
+**Quick Start:**
 
-## How To Use The Site
+```bash
+# Copy environment template
+cp .env.example .env
 
-### For Visitors
+# Start all services (database, backend, frontend)
+docker-compose up -d
 
-1. Open the site in the browser.
-2. Use the top navigation bar to move between sections.
-3. Open `בלוג שאלות ותשובות` to read published blog cards.
-4. At the bottom of the blog page, fill in the question form and submit it.
-5. The question is saved in the database so the clinic admin can review it later.
+# View status
+docker-compose ps
 
-### For Admins
-
-1. Open the `לשימוש המרפאה` page or go to `#clinic`.
-2. Log in with the admin username and password.
-3. After login, open the blog page.
-4. Use `פוסט חדש` to create a new public blog card.
-5. Use `עריכה` on any card to update its question or answer.
-6. Use `מחיקה` on any card to remove it.
-7. In the admin question section, review visitor questions and use them as ideas for future posts.
-
-## Local Setup
-
-### Prerequisites
-
-Install these first:
-
-- Java `21`
-- Node.js `18+` or newer
-- `npm`
-- PostgreSQL
-
-### 1. Create The Database
-
-Create a PostgreSQL database named:
-
-```text
-blogdb
+# View logs
+docker-compose logs -f
 ```
 
-The backend is configured by default to connect to:
+Services will be available at:
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:8080
+- **Database**: localhost:3306
 
-- database: `blogdb`
-- host: `localhost`
-- port: `5432`
+See [DOCKER_DEPLOYMENT.md](DOCKER_DEPLOYMENT.md) for detailed Docker instructions.
 
-### 2. Optional Environment Variables
+### Option 2: Local Setup
 
-You can override the default database and admin values with environment variables.
+**Prerequisites:**
+- Java 21
+- Node.js 18+
+- npm or yarn
+- MySQL 8.0
 
-Backend database settings:
+**1. Create MySQL Database**
 
-- `DB_URL`
-- `DB_USERNAME`
-- `DB_PASSWORD`
-
-Admin seed settings:
-
-- `APP_CORS_ALLOWED_ORIGINS`
-- `ADMIN_USERNAME`
-- `ADMIN_PASSWORD`
-- `ADMIN_DISPLAY_NAME`
-
-Current defaults from `application.properties`:
-
-- admin username: `admin`
-- admin password: `change-me-now`
-- admin display name: `Clinic Admin`
-
-For real use, change the default admin password before deployment.
-
-## Run The Project
-
-### Start The Backend
-
-From:
-
-```text
-backend/dr-halachmi-clinic
+```bash
+mysql -u root -p
+CREATE DATABASE dr_halachmi_clinic;
+CREATE USER 'clinic_user'@'localhost' IDENTIFIED BY 'clinic_password';
+GRANT ALL PRIVILEGES ON dr_halachmi_clinic.* TO 'clinic_user'@'localhost';
+FLUSH PRIVILEGES;
 ```
 
-Run:
+**2. Set Environment Variables**
+
+```bash
+export DB_URL=jdbc:mysql://localhost:3306/dr_halachmi_clinic
+export DB_USERNAME=clinic_user
+export DB_PASSWORD=clinic_password
+export ADMIN_USERNAME=admin
+export ADMIN_PASSWORD=yourSecurePassword
+```
+
+Or create `backend/dr-halachmi-clinic/src/main/resources/application-local.properties`:
+
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/dr_halachmi_clinic
+spring.datasource.username=clinic_user
+spring.datasource.password=clinic_password
+app.admin.seed.username=admin
+app.admin.seed.password=yourSecurePassword
+```
+
+**3. Start Backend**
+
+From `backend/dr-halachmi-clinic/`:
 
 ```powershell
 .\mvnw.cmd spring-boot:run
 ```
 
-The backend will run on:
+Backend runs on: http://localhost:8080
 
-```text
-http://localhost:8080
-```
+**4. Start Frontend**
 
-### Start The Frontend
-
-From:
-
-```text
-frontend
-```
-
-Install dependencies if needed:
+From `frontend/`:
 
 ```powershell
 npm install
-```
-
-Run the dev server:
-
-```powershell
 npm run dev
 ```
 
-The frontend will run on:
+Frontend runs on: http://localhost:3000
 
-```text
-http://localhost:5173
-```
+## Using the Site
 
-The Vite config already proxies `/api` requests to the Spring backend.
+### For Visitors
 
-## Blog And Admin Behavior
+1. Open http://localhost:3000 (or your deployed URL)
+2. Browse sections via navigation menu
+3. Go to **Blog** to read Q&A posts
+4. Submit questions at the bottom of the blog page
+5. Questions are saved for admin review
 
-- Published blog cards are loaded from the backend database.
-- Visitor questions are saved separately from published posts.
-- Admin login uses a server session, so refreshing the page keeps the admin logged in while the session is active.
-- The backend seeds the first admin user and starter blog posts when the database is empty.
+### For Admins
 
-## Useful Commands
-
-Frontend:
-
-```powershell
-npm run lint
-npm run build
-```
-
-Backend:
-
-```powershell
-.\mvnw.cmd test
-```
-
-## Deployment Checklist
-
-Before deploying:
-
-1. Set real values for `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, `ADMIN_USERNAME`, `ADMIN_PASSWORD`, and `APP_CORS_ALLOWED_ORIGINS`.
-2. Make sure `APP_CORS_ALLOWED_ORIGINS` matches the real frontend domain.
-3. Replace oversized image and video assets with compressed versions for faster mobile loading.
-4. Run `npm run build` and `.\mvnw.cmd test` again before publishing.
-
-## Troubleshooting
-
-If the blog or admin area does not work locally:
-
-1. Make sure PostgreSQL is running.
-2. Make sure the `blogdb` database exists.
-3. Make sure the backend is running on `http://localhost:8080`.
-4. Make sure the frontend is running on `http://localhost:5173`.
-5. If admin login fails, check the configured admin username/password values.
+1. Navigate to **Admin** section (or `#clinic`)
+2. Log in with configured credentials (default: `admin` / see `.env`)
+3. After login, access admin dashboard
+4. **Create Posts**: Use "New Post" to add Q&A blog content
+5. **Edit Posts**: Click edit icon on any blog card
+6. **Delete Posts**: Click delete icon to remove content
+7. **Review Questions**: Check visitor-submitted questions for content ideas
 
 ## Project Structure
 
-```text
-plaste/
-├─ frontend/
-│  ├─ src/
-│  └─ package.json
-├─ backend/
-│  └─ dr-halachmi-clinic/
-│     ├─ src/
-│     └─ pom.xml
-└─ README.md
 ```
+plaste/
+├── backend/dr-halachmi-clinic/    # Spring Boot API
+│   ├── src/main/java/             # Java source code
+│   ├── src/main/resources/         # Configuration files
+│   ├── pom.xml                     # Maven dependencies
+│   └── Dockerfile                  # Docker build configuration
+├── frontend/                        # React + Vite SPA
+│   ├── src/                        # React components & pages
+│   ├── package.json                # npm dependencies
+│   ├── vite.config.js              # Vite configuration
+│   └── Dockerfile                  # Docker build configuration
+├── docker-compose.yml              # Multi-container orchestration
+├── .env.example                    # Environment template
+├── DOCKER_DEPLOYMENT.md            # Detailed Docker guide
+└── README.md                       # This file
+```
+
+## Environment Variables
+
+Key configuration options:
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `DB_URL` | MySQL connection string | Database connection |
+| `DB_USERNAME` | `clinic_user` | Database user |
+| `DB_PASSWORD` | `clinic_password` | Database password |
+| `ADMIN_USERNAME` | `admin` | Admin login username |
+| `ADMIN_PASSWORD` | `admin123` | Admin login password |
+| `APP_CORS_ALLOWED_ORIGINS` | `http://localhost:3000` | Frontend URL (backend CORS) |
+| `BACKEND_PORT` | `8080` | Backend API port |
+| `FRONTEND_PORT` | `3000` | Frontend server port |
+
+For production, use strong passwords and adjust CORS origins to your domain.
+
+## Database Behavior
+
+- **Auto-initialization**: First startup creates tables and seeds initial admin user
+- **Data Persistence**: All data stored in MySQL (or Docker volume if using Docker)
+- **Migrations**: JPA handles schema updates via `spring.jpa.hibernate.ddl-auto=update`
+- **Blog Posts**: Stored separately from visitor questions
+- **Sessions**: Admin login maintains HTTP session across page refreshes
+
+## Development Commands
+
+### Docker Commands
+```bash
+# Start services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop services
+docker-compose down
+
+# Rebuild after code changes
+docker-compose up -d --build
+
+# Enter backend container
+docker-compose exec backend sh
+
+# Clean everything (warning: deletes data)
+docker-compose down -v
+```
+
+### Frontend Commands
+```bash
+cd frontend
+
+# Install dependencies
+npm install
+
+# Development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Lint code
+npm run lint
+
+# Preview production build
+npm run preview
+```
+
+### Backend Commands
+```bash
+cd backend/dr-halachmi-clinic
+
+# Run locally
+.\mvnw.cmd spring-boot:run
+
+# Run tests
+.\mvnw.cmd test
+
+# Build JAR
+.\mvnw.cmd clean package
+
+# Clean build artifacts
+.\mvnw.cmd clean
+```
+
+## Production Deployment Checklist
+
+Before deploying to production:
+
+### Security
+- [ ] Change default `ADMIN_PASSWORD` to a strong password
+- [ ] Set `SESSION_COOKIE_SECURE=true` (requires HTTPS)
+- [ ] Generate strong `DB_PASSWORD`
+- [ ] Use secrets management system (not plain `.env` files)
+- [ ] Enable HTTPS with SSL certificate
+- [ ] Set realistic `APP_CORS_ALLOWED_ORIGINS` to your domain
+
+### Configuration
+- [ ] Update `APP_CORS_ALLOWED_ORIGINS` to production frontend URL
+- [ ] Configure SMTP for email notifications (`SPRING_MAIL_*`)
+- [ ] Set production database credentials
+- [ ] Disable JPA SQL logging (`JPA_SHOW_SQL=false`)
+- [ ] Configure backup strategy for database
+
+### Performance
+- [ ] Optimize and compress images for web
+- [ ] Compress video assets for mobile
+- [ ] Run frontend build: `npm run build`
+- [ ] Run backend tests: `.\mvnw.cmd test`
+- [ ] Monitor Docker resource limits
+- [ ] Consider managed database service (AWS RDS, Google Cloud SQL, etc.)
+
+### Monitoring
+- [ ] Set up log aggregation
+- [ ] Configure health check monitoring
+- [ ] Enable application performance monitoring (APM)
+- [ ] Set up alerts for service failures
+- [ ] Enable database backups
+
+See [DOCKER_DEPLOYMENT.md](DOCKER_DEPLOYMENT.md) for detailed Docker production setup.
+
+## Troubleshooting
+
+### Using Docker
+
+**Services won't start:**
+```bash
+# Check service status
+docker-compose ps
+
+# View logs
+docker-compose logs
+
+# Rebuild and restart
+docker-compose down
+docker-compose up -d --build
+```
+
+**Backend connection issues:**
+```bash
+# Check if backend is healthy
+docker-compose exec backend curl http://localhost:8080/actuator/health
+
+# Check logs
+docker-compose logs backend
+```
+
+**Database connection issues:**
+```bash
+# Check database status
+docker-compose ps db
+
+# View database logs
+docker-compose logs db
+
+# Test database connection
+docker-compose exec db mysql -u clinic_user -p -e "SELECT 1"
+```
+
+**Frontend API errors:**
+```bash
+# Ensure backend URL is correct
+# Check APP_CORS_ALLOWED_ORIGINS matches frontend URL
+# Verify backend is accessible from frontend container
+docker-compose exec frontend curl http://backend:8080/actuator/health
+```
+
+### Local Setup
+
+**Backend won't start:**
+- Verify Java 21 is installed: `java -version`
+- Check MySQL is running
+- Verify database credentials in environment variables
+- View logs for detailed error messages
+
+**Frontend shows API errors:**
+- Verify backend is running on `http://localhost:8080`
+- Check CORS configuration: `APP_CORS_ALLOWED_ORIGINS`
+- Verify frontend environment variables are set
+
+**Admin login fails:**
+- Confirm `ADMIN_USERNAME` and `ADMIN_PASSWORD` match your configuration
+- Check database is initialized with admin user
+- View backend logs for authentication errors
+
+**Database connection fails:**
+- Verify MySQL is running: `mysql -u root -p`
+- Check database exists: `SHOW DATABASES;`
+- Verify user has permissions: `SHOW GRANTS FOR 'clinic_user'@'localhost';`
+
+For more detailed troubleshooting, see [DOCKER_DEPLOYMENT.md](DOCKER_DEPLOYMENT.md).
+
+## Architecture
+
+### Backend (Spring Boot)
+- REST API for blog, admin, and contact operations
+- JWT session management for admin authentication
+- MySQL database persistence
+- Email notifications (optional SMTP)
+- CORS configured for frontend origin
+- Health checks via Spring Actuator
+
+### Frontend (React + Vite)
+- Single Page Application with hash-based routing
+- Component-based UI with React 19
+- Vite for fast development and optimized builds
+- API client for backend communication
+- Responsive design for all screen sizes
+
+### Database (MySQL)
+- Stores blog posts and visitor questions
+- Admin user credentials
+- Automatic schema initialization on startup
+- Persistent volume in Docker setup
+
+## License & Contributing
+
+Please refer to project guidelines for contributions and licensing information.
+
+## Support
+
+For issues or questions:
+1. Check [DOCKER_DEPLOYMENT.md](DOCKER_DEPLOYMENT.md) for Docker-specific help
+2. Review troubleshooting section above
+3. Check service logs: `docker-compose logs` or backend/frontend console output
+4. Verify all environment variables are correctly set

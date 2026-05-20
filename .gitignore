@@ -8,3 +8,34 @@
 /dataSources.local.xml
 # Editor-based HTTP Client requests
 /httpRequests/
+
+# Environment variables (SECRETS - Never commit)
+.env
+.env.local
+.env.*.local
+
+# Docker
+docker-compose.override.yml
+
+# Backend
+backend/dr-halachmi-clinic/target/
+backend/dr-halachmi-clinic/.classpath
+backend/dr-halachmi-clinic/.project
+backend/dr-halachmi-clinic/.settings/
+backend/dr-halachmi-clinic/*.iml
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vscode/
+frontend/*.iml
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
