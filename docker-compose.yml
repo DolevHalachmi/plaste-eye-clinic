@@ -27,8 +27,8 @@ services:
       DB_USERNAME: ${DB_USERNAME:-clinic_user}
       DB_PASSWORD: ${DB_PASSWORD} # <-- Matches the DB password above
       PORT: 8080
-      APP_CORS_ALLOWED_ORIGINS: https://dr-halachmi.com
-      APP_PUBLIC_BASE_URL: https://dr-halachmi.com
+      APP_CORS_ALLOWED_ORIGINS: ${APP_CORS_ALLOWED_ORIGINS:-https://dr-halachmi.com}
+      APP_PUBLIC_BASE_URL: ${APP_PUBLIC_BASE_URL:-https://dr-halachmi.com}
       ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD} # <-- Set this in Coolify UI
       SESSION_COOKIE_SECURE: true
@@ -45,7 +45,7 @@ services:
       dockerfile: Dockerfile
     container_name: plaste-frontend
     environment:
-      VITE_API_URL: https://api.dr-halachmi.com
+      VITE_API_URL: ${VITE_API_URL:-https://api.dr-halachmi.com}
     expose:
       - "80" # <-- Perfect! Let Coolify handle the proxying
     depends_on:
