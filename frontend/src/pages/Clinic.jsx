@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { apiFetch } from '../api/client';
 
 const initialForm = {
   username: '',
@@ -21,9 +22,7 @@ export default function Clinic() {
   useEffect(() => {
     const loadSession = async () => {
       try {
-        const response = await fetch('/api/admin/auth/session', {
-          credentials: 'include',
-        });
+        const response = await apiFetch('/api/admin/auth/session');
         const data = await readJson(response);
 
         if (response.ok) {
@@ -60,14 +59,13 @@ export default function Clinic() {
     setStatus({ loading: true, error: '', message: '' });
 
     try {
-      const response = await fetch('/api/admin/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(form),
-      });
+        const response = await apiFetch('/api/admin/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(form),
+        });
 
       const data = await readJson(response);
 
@@ -102,10 +100,9 @@ export default function Clinic() {
     setStatus({ loading: true, error: '', message: '' });
 
     try {
-      await fetch('/api/admin/auth/logout', {
-        method: 'POST',
-        credentials: 'include',
-      });
+          await apiFetch('/api/admin/auth/logout', {
+          method: 'POST',
+        });
     } finally {
       setAdmin(null);
       setStatus({

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { apiFetch } from '../api/client';
 
 const emptyVisitorForm = {
   name: '',
@@ -51,9 +52,7 @@ export default function Blog() {
     setIdeasState({ loading: true, error: '' });
 
     try {
-      const response = await fetch('/api/admin/blog/questions', {
-        credentials: 'include',
-      });
+      const response = await apiFetch('/api/admin/blog/questions');
       const data = await readJson(response);
 
       if (!response.ok) {
@@ -74,9 +73,7 @@ export default function Blog() {
   // Restores the logged-in admin session and unlocks admin-only tools.
   const loadAdminSession = useCallback(async () => {
     try {
-      const response = await fetch('/api/admin/auth/session', {
-        credentials: 'include',
-      });
+      const response = await apiFetch('/api/admin/auth/session');
       const data = await readJson(response);
 
       if (!response.ok) {
@@ -98,7 +95,7 @@ export default function Blog() {
     setPostsState({ loading: true, error: '' });
 
     try {
-      const response = await fetch('/api/blog/posts');
+      const response = await apiFetch('/api/blog/posts');
       const data = await readJson(response);
 
       if (!response.ok) {
@@ -146,13 +143,13 @@ export default function Blog() {
     setVisitorState({ loading: true, error: '', message: '' });
 
     try {
-      const response = await fetch('/api/blog/questions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(visitorForm),
-      });
+          const response = await apiFetch('/api/blog/questions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(visitorForm),
+        });
       const data = await readJson(response);
 
       if (!response.ok) {
@@ -233,14 +230,13 @@ export default function Blog() {
       : '/api/admin/blog/posts';
 
     try {
-      const response = await fetch(requestUrl, {
-        method: editingPostId ? 'PUT' : 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(postForm),
-      });
+          const response = await apiFetch(requestUrl, {
+            method: editingPostId ? 'PUT' : 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(postForm),
+        });
       const data = await readJson(response);
 
       if (!response.ok) {
@@ -278,10 +274,9 @@ export default function Blog() {
     setEditorState({ loading: true, error: '', message: '' });
 
     try {
-      const response = await fetch(`/api/admin/blog/posts/${postId}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      });
+          const response = await apiFetch(`/api/admin/blog/posts/${postId}`, {
+          method: 'DELETE',
+        });
       const data = await readJson(response);
 
       if (!response.ok) {
@@ -325,10 +320,9 @@ export default function Blog() {
     }));
 
     try {
-      const response = await fetch(`/api/admin/blog/questions/${questionId}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      });
+          const response = await apiFetch(`/api/admin/blog/posts/${questionId}`, {
+          method: 'DELETE',
+        });
       const data = await readJson(response);
 
       if (!response.ok) {
