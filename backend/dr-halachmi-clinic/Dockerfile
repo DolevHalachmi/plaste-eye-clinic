@@ -19,12 +19,15 @@ WORKDIR /app
 # Copy the built JAR from the builder stage
 COPY --from=builder /build/target/dr-halachmi-clinic-0.0.1-SNAPSHOT.jar app.jar
 
-# Expose port
+# Default local port. Render overrides this with its own PORT env var.
+ENV PORT=8080
+
+# Expose the default local port for documentation/local container runs.
 EXPOSE 8080
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:8080/actuator/health || exit 1
+  CMD sh -c 'wget --no-verbose --tries=1 --spider "http://127.0.0.1:${PORT}/actuator/health" || exit 1'
 
 # Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
