@@ -600,7 +600,7 @@ export default function Blog() {
               <input
                 type="text"
                 id="subject"
-                placeholder="Subject"
+                placeholder="נושא"
                 onChange={handleVisitorChange}
                 name="subject"
                 value={visitorForm.subject}
