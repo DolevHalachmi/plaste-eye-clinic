@@ -2,7 +2,7 @@ import { Suspense, lazy, useEffect, useMemo, useState } from 'react';
 import Layout from './component/Layout';
 import { resolveLegacyHashPath, resolveRoute, routesByKey } from './siteConfig';
 import { usePageSeo } from './usePageSeo';
-import { Analytics } from "@vercel/analytics/next"
+import { inject } from "@vercel/analytics";
 
 const HomePage = lazy(() => import('./pages/Home'));
 const AestheticPage = lazy(() => import('./pages/Aesthetic'));
@@ -47,7 +47,12 @@ export default function App() {
   const initialRoute = useMemo(buildInitialRoute, []);
   const [route, setRoute] = useState(initialRoute);
 
+  useEffect(() => {
+    inject();
+  }, []);
+  
   usePageSeo(route);
+  
 
   useEffect(() => {
     const handlePopState = () => {
@@ -87,6 +92,5 @@ export default function App() {
         <CurrentPage />
       </Suspense>
     </Layout>
-    <Analytics />
   );
 }
