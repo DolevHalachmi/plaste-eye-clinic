@@ -2,6 +2,7 @@ import { Suspense, lazy, useEffect, useMemo, useState } from 'react';
 import Layout from './component/Layout';
 import { resolveLegacyHashPath, resolveRoute, routesByKey } from './siteConfig';
 import { usePageSeo } from './usePageSeo';
+import { Analytics } from "@vercel/analytics/next"
 
 const HomePage = lazy(() => import('./pages/Home'));
 const AestheticPage = lazy(() => import('./pages/Aesthetic'));
@@ -86,5 +87,6 @@ export default function App() {
         <CurrentPage />
       </Suspense>
     </Layout>
+    <Analytics />
   );
 }
