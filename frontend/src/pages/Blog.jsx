@@ -320,7 +320,7 @@ export default function Blog() {
     }));
 
     try {
-          const response = await apiFetch(`/api/admin/blog/posts/${questionId}`, {
+          const response = await apiFetch(`/api/admin/blog/questions/${questionId}`, {
           method: 'DELETE',
         });
       const data = await readJson(response);
