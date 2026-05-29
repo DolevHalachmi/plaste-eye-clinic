@@ -39,8 +39,8 @@ export default function Aesthetic() {
       <Slider slides={slides} interval={4000} />
 
       <section className="video-aesthetic">
-        <video id="video-aesthetic1" controls muted playsInline preload="metadata" src={video1} />
-        <video id="video-aesthetic2" controls muted playsInline preload="metadata" src={video2} />
+        <video id="video-aesthetic1" autoPlay loop muted playsInline controls preload="auto" src={video1} />
+        <video id="video-aesthetic2" autoPlay loop muted playsInline controls preload="auto" src={video2} />
       </section>
 
       <section className="aesthetic-treatments-section">

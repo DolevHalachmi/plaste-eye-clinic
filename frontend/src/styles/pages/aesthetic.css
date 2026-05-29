@@ -14,9 +14,9 @@
 }
 
 .video-aesthetic video {
-  width: min(42%, 500px);
-  flex: 1 1 18rem;
-  max-height: 75vh;
+  width: min(30%, 350px);
+  flex: 1 1 13rem;
+  max-height: 53vh;
   object-fit: cover;
 }
 
@@ -77,7 +77,8 @@
   }
 
   .video-aesthetic video {
-    width: 100%;
+    width: 70%;
+    margin-inline: auto;
   }
 }
 

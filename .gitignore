@@ -38,10 +38,14 @@ frontend/src/assets/eyeImg/large video.mp4
 
 # IDE
 .idea/
+.vscode/
 *.swp
 *.swo
 *~
 .DS_Store
+
+# Tool config (local-only, not for version control)
+.claude/
 
 # Logs
 *.log
