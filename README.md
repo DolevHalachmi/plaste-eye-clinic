@@ -11,8 +11,7 @@ dashboard — deployed and actively serving real visitors.
 
 ---
 
-<!-- Replace with a real screenshot once you have one -->
-<!-- ![App screenshot](./screenshot.png) -->
+![App screenshot](image.png)
 
 ---
 
@@ -222,4 +221,4 @@ Admin login is at `http://localhost:5173/#clinic`
 
 **Dolev Halachmi** — Software Engineer
 
-[GitHub](https://github.com/DolHal) · [Live site](https://dr-halachmi.com)
+[GitHub](https://github.com/DolevHalachmi) · [Live site](https://dr-halachmi.com)
