@@ -49,7 +49,6 @@ public class QuestionAnswerNotificationService {
 			return DeliveryResult.failed("The post was published, but sending the answer email failed. Save the post again after mail is configured.");
 		}
 
-		}
 	}
 
 	private String buildBody(BlogQuestion question, BlogPost post) {
