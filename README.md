@@ -109,8 +109,8 @@ Browser
   ├── Vercel  (dr-halachmi.com)          React 19 + Vite — static SPA
   │
   └── Render  (api.dr-halachmi.com)      Spring Boot 4.0 / Java 21
-                       │
-                       └── Neon          PostgreSQL 16 — serverless
+          Docker (multi-stage build)              │
+                                                  └── Neon    PostgreSQL 16 — serverless
 ```
 
 ---
@@ -126,7 +126,8 @@ plaste/
 │   │   └── config/             Security filter chain and CORS config
 │   ├── src/main/resources/
 │   │   └── application.properties
-│   └── pom.xml
+│   ├── pom.xml
+│   └── Dockerfile              Multi-stage build (JDK 21 → JRE 21 alpine)
 │
 ├── frontend/
 │   ├── src/

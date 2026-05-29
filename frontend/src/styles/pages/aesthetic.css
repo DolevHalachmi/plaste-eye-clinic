@@ -16,8 +16,7 @@
 .video-aesthetic video {
   width: min(30%, 350px);
   flex: 1 1 13rem;
-  max-height: 53vh;
-  object-fit: cover;
+  height: auto;
 }
 
 .video-aesthetic #video-aesthetic1 {
