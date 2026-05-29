@@ -1,117 +1,168 @@
-# Plaste Clinic Website
+# Dr. Halachmi Clinic — Full-Stack Web Application
 
-A modern clinic website with public pages, interactive Q&A blog, and admin dashboard for managing content.
+A production full-stack web application built for a real medical clinic in Israel.
+Covers public clinic pages, a bilingual Hebrew/English Q&A blog, and a secure admin
+dashboard — deployed and actively serving real visitors.
 
-**Tech Stack:**
-- **Frontend**: React 19 + Vite
-- **Backend**: Spring Boot 4.0 + Java 21
-- **Database**: PostgreSQL 16
-- **Deployment**: Docker & Docker Compose (recommended) or local setup
+**[🌐 Live Demo → dr-halachmi.com](https://dr-halachmi.com)**
 
-The site includes public clinic pages, contact form, Q&A blog system, and admin panel for content management.
+> Built by **Dolev Halachmi** as a first full-stack project — learning React, Spring Boot,
+> PostgreSQL, and cloud deployment from scratch.
+
+---
+
+<!-- Replace with a real screenshot once you have one -->
+<!-- ![App screenshot](./screenshot.png) -->
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React 19, Vite 8 |
+| Backend | Spring Boot 4.0, Java 21 |
+| Database | PostgreSQL 16 (Neon serverless) |
+| Email | Resend API |
+| Frontend hosting | Vercel |
+| Backend hosting | Render |
+| Uptime monitoring | UptimeRobot |
+| Analytics | Vercel Analytics |
+
+---
 
 ## Features
 
-### Visitor Features
-- Browse clinic pages from navigation menu
-- Read published Q&A blog posts
-- Submit questions for clinic review
-- Contact clinic via contact form
+### Public site
+- Bilingual (Hebrew / English) responsive clinic website with RTL layout
+- Pages: Home, Aesthetic Treatments, Eye Treatments, Our Team, Q&A Blog, Contact
+- Auto-playing looped treatment videos, image slider with smooth transitions
+- Hash-based single-page routing (`/#home`, `/#blog`, etc.)
 
-### Admin Features
-- Secure login with session management
-- Create and publish blog Q&A posts
-- Edit existing blog content
-- Delete blog posts
-- Review visitor-submitted questions
-- Manage admin user account
+### Q&A blog system
+- Visitors submit questions with their name, email, and phone number
+- Admin reviews the inbox and turns any question into a published post
+- Patient automatically receives an answer-notification email via Resend API
+- If automation fails the admin sees the patient's email as a manual fallback
 
-## Navigation Structure
+### Admin dashboard
+- Secure session-based login (HttpOnly, SameSite=Lax cookies)
+- Create, edit, and delete published blog posts
+- Manage the full visitor question inbox
+- One-click "Use as post idea" to draft a post from a visitor question
 
-The site uses hash-based navigation (#anchor routing):
+---
 
-| Route | Page |
-|-------|------|
-| `#home` | Home page |
-| `#aesthetic` | Aesthetic treatments |
-| `#eyes` | Eye-related treatments |
-| `#team` | Clinic team |
-| `#blog` | Public Q&A blog & question form |
-| `#contact` | Contact page |
-| `#clinic` | Admin login |
+## Engineering Challenges
 
-**Example URLs:**
-- `http://localhost:5173/#home`
-- `http://localhost:5173/#blog`
-- `http://localhost:5173/#clinic` (admin login)
+These are the real problems encountered and solved while building this project.
 
-## Getting Started
+### Cross-origin session auth failing on iOS Safari
+Admin sessions worked on desktop Chrome but silently failed on iPhone Safari.
+Root cause: Safari's ITP (Intelligent Tracking Prevention) blocks cross-site cookies
+between `dr-halachmi.com` (Vercel) and `plaste-eye-clinic.onrender.com` (Render) because
+they are different registrable domains.
 
-### Option 1: Docker (Recommended) 🐳
+**Fix:** pointed `api.dr-halachmi.com` as a CNAME to the Render backend. Both ends now
+share the `dr-halachmi.com` registrable domain, which Safari treats as same-site. Changed
+the session cookie from `SameSite=None` (required for cross-site) to `SameSite=Lax`
+(the correct, more restrictive setting).
 
-**Prerequisites:**
-- Docker 20.10+
-- Docker Compose 2.0+
+### Email delivery blocked by cloud provider
+Gmail SMTP on port 587 is blocked on Render's network, so the Spring Mail / JavaMailSender
+setup that worked locally produced no errors but never delivered.
 
-**Quick Start:**
+**Fix:** migrated to the Resend Java SDK, which sends over HTTPS and is not port-restricted.
+The service skips silently when no API key is set (safe for local dev) and surfaces a
+warning in the admin UI on failure — without rolling back the published blog post.
 
-```bash
-# Copy environment template
-cp .env.example .env
+### Crossing the Vercel 100 MB source-bundle limit
+After re-adding compressed videos from the recycling bin, the tracked assets grew to
+112.9 MB. Vercel's source bundle limit is 100 MB, so deployments silently refused to build.
 
-# Start all services (database, backend, frontend)
-docker-compose up -d
+**Fix:** identified that only `.optimized.mp4` versions were imported in code, removed the
+original uncompressed videos (−49.8 MB), removed JPG/PNG originals where `.webp` versions
+were already the ones imported, and added precise `.gitignore` rules to prevent re-adding them.
 
-# View status
-docker-compose ps
+### Deployment cost migration
+Started on a Hetzner VPS with Coolify and Docker Compose. Migrated to Vercel (frontend) +
+Render (backend) + Neon (serverless PostgreSQL) to reduce running costs. Reworked CORS
+origins, cookie domain config, environment variables, and build pipelines across two
+platforms in the process.
 
-# View logs
-docker-compose logs -f
+### RTL bilingual interface
+The site is primarily Hebrew (RTL) with English in admin controls and technical labels.
+Required explicit `direction: rtl` handling in CSS, custom font loading (Alef typeface),
+and careful layout decisions in React so Hebrew and English sections don't break each other.
+
+### Keeping a free-tier backend alive
+Render's free tier spins down services after inactivity. Configured UptimeRobot to ping
+the `/actuator/health` endpoint every 13 minutes. The Spring Actuator health endpoint also
+serves liveness and readiness probes for Render's health-check system.
+
+---
+
+## Architecture
+
+```
+Browser
+  │
+  ├── Vercel  (dr-halachmi.com)          React 19 + Vite — static SPA
+  │
+  └── Render  (api.dr-halachmi.com)      Spring Boot 4.0 / Java 21
+                       │
+                       └── Neon          PostgreSQL 16 — serverless
 ```
 
-Services will be available at:
-- **Frontend**: http://localhost:5173
-- **Backend API**: http://localhost:8080
-- **Database**: localhost:5432
+---
 
-See [DOCKER_DEPLOYMENT.md](DOCKER_DEPLOYMENT.md) for detailed Docker instructions.
+## Project Structure
 
-### Option 2: Local Setup
+```
+plaste/
+├── backend/dr-halachmi-clinic/
+│   ├── src/main/java/
+│   │   ├── auth/               Session-based admin authentication
+│   │   ├── blog/               Blog posts, visitor questions, Resend email
+│   │   └── config/             Security filter chain and CORS config
+│   ├── src/main/resources/
+│   │   └── application.properties
+│   └── pom.xml
+│
+├── frontend/
+│   ├── src/
+│   │   ├── pages/              One component per route
+│   │   ├── component/          Navbar, Footer, Slider, VideoCard, Social
+│   │   ├── api/                Fetch client (credentials + timeout)
+│   │   ├── styles/             CSS split by page and component
+│   │   └── assets/             Webp images, optimized mp4 videos, fonts
+│   ├── vercel.json
+│   └── vite.config.js
+│
+├── .env.example
+└── README.md
+```
 
-**Prerequisites:**
+---
+
+## Running Locally
+
+### Prerequisites
 - Java 21
 - Node.js 18+
-- npm or yarn
-- PostgreSQL 12+
+- PostgreSQL running locally
 
-**1. Create PostgreSQL Database**
+### 1. Create the database
 
-```bash
-# Connect to PostgreSQL
-psql -U postgres
-
-# Create database and user
+```sql
 CREATE DATABASE dr_halachmi_clinic;
 CREATE USER clinic_user WITH PASSWORD 'clinic_password';
-ALTER ROLE clinic_user SET client_encoding TO 'utf8';
-ALTER ROLE clinic_user SET default_transaction_isolation TO 'read committed';
-ALTER ROLE clinic_user SET default_transaction_deferrable TO on;
-ALTER ROLE clinic_user SET default_transaction_read_only TO off;
 GRANT ALL PRIVILEGES ON DATABASE dr_halachmi_clinic TO clinic_user;
-\q
 ```
 
-**2. Set Environment Variables**
+### 2. Configure the backend
 
-```bash
-export DB_URL=jdbc:postgresql://localhost:5432/dr_halachmi_clinic
-export DB_USERNAME=clinic_user
-export DB_PASSWORD=clinic_password
-export ADMIN_USERNAME=admin
-export ADMIN_PASSWORD=yourSecurePassword
-```
-
-Or create `backend/dr-halachmi-clinic/src/main/resources/application-local.properties`:
+Create `backend/dr-halachmi-clinic/src/main/resources/application-local.properties`:
 
 ```properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/dr_halachmi_clinic
@@ -121,290 +172,54 @@ app.admin.seed.username=admin
 app.admin.seed.password=yourSecurePassword
 ```
 
-**3. Start Backend**
-
-From `backend/dr-halachmi-clinic/`:
-
-```powershell
-.\mvnw.cmd spring-boot:run
+```bash
+cd backend/dr-halachmi-clinic
+./mvnw spring-boot:run          # macOS / Linux
+.\mvnw.cmd spring-boot:run      # Windows
 ```
 
-Backend runs on: http://localhost:8080
+Backend starts at `http://localhost:8080`
 
-**4. Start Frontend**
+### 3. Start the frontend
 
-From `frontend/`:
-
-```powershell
+```bash
+cd frontend
 npm install
 npm run dev
 ```
 
-Frontend runs on: http://localhost:5173
+Frontend starts at `http://localhost:5173`
 
-## Using the Site
+Admin login is at `http://localhost:5173/#clinic`
 
-### For Visitors
-
-1. Open http://localhost:5173 (or your deployed URL)
-2. Browse sections via navigation menu
-3. Go to **Blog** to read Q&A posts
-4. Submit questions at the bottom of the blog page
-5. Questions are saved for admin review
-
-### For Admins
-
-1. Navigate to **Admin** section (or `#clinic`)
-2. Log in with configured credentials (default: `admin` / see `.env`)
-3. After login, access admin dashboard
-4. **Create Posts**: Use "New Post" to add Q&A blog content
-5. **Edit Posts**: Click edit icon on any blog card
-6. **Delete Posts**: Click delete icon to remove content
-7. **Review Questions**: Check visitor-submitted questions for content ideas
-
-## Project Structure
-
-```
-plaste/
-├── backend/dr-halachmi-clinic/    # Spring Boot API
-│   ├── src/main/java/             # Java source code
-│   ├── src/main/resources/         # Configuration files
-│   ├── pom.xml                     # Maven dependencies
-│   └── Dockerfile                  # Docker build configuration
-├── frontend/                        # React + Vite SPA
-│   ├── src/                        # React components & pages
-│   ├── package.json                # npm dependencies
-│   ├── vite.config.js              # Vite configuration
-│   └── Dockerfile                  # Docker build configuration
-├── docker-compose.yml              # Multi-container orchestration
-├── .env.example                    # Environment template
-├── DOCKER_DEPLOYMENT.md            # Detailed Docker guide
-└── README.md                       # This file
-```
+---
 
 ## Environment Variables
 
-Key configuration options:
+### Backend (Render)
 
-| Variable | Default | Purpose |
-|----------|---------|---------|
-| `DB_URL` | PostgreSQL connection string | Database connection |
-| `DB_USERNAME` | `clinic_user` | Database user |
-| `DB_PASSWORD` | `clinic_password` | Database password |
-| `ADMIN_USERNAME` | `admin` | Admin login username |
-| `ADMIN_PASSWORD` | `admin123` | Admin login password |
-| `APP_CORS_ALLOWED_ORIGINS` | `http://localhost:5173` | Frontend URL (backend CORS) |
-| `BACKEND_PORT` | `8080` | Backend API port |
-| `FRONTEND_PORT` | `5173` | Frontend server port |
+| Variable | Purpose |
+|---|---|
+| `DB_URL` | PostgreSQL JDBC connection string |
+| `DB_USERNAME` | Database user |
+| `DB_PASSWORD` | Database password |
+| `ADMIN_USERNAME` | Admin login username |
+| `ADMIN_PASSWORD` | Admin login password |
+| `APP_CORS_ALLOWED_ORIGINS` | Frontend origin (`https://dr-halachmi.com`) |
+| `APP_PUBLIC_BASE_URL` | Frontend base URL used in notification email links |
+| `RESEND_API_KEY` | Resend API key — leave blank locally to skip email |
+| `ANSWER_NOTIFICATION_FROM` | Sender address (`noreply@dr-halachmi.com`) |
 
-For production, use strong passwords and adjust CORS origins to your domain.
+### Frontend (Vercel)
 
-## Database Behavior
+| Variable | Purpose |
+|---|---|
+| `VITE_API_URL` | Backend base URL (`https://api.dr-halachmi.com`) |
 
-- **Auto-initialization**: First startup creates tables and seeds initial admin user
-- **Data Persistence**: All data stored in PostgreSQL (or Docker volume if using Docker)
-- **Migrations**: JPA handles schema updates via `spring.jpa.hibernate.ddl-auto=update`
-- **Blog Posts**: Stored separately from visitor questions
-- **Sessions**: Admin login maintains HTTP session across page refreshes
+---
 
-## Development Commands
+## Author
 
-### Docker Commands
-```bash
-# Start services
-docker-compose up -d
+**Dolev Halachmi** — Software Engineer
 
-# View logs
-docker-compose logs -f
-
-# Stop services
-docker-compose down
-
-# Rebuild after code changes
-docker-compose up -d --build
-
-# Enter backend container
-docker-compose exec backend sh
-
-# Clean everything (warning: deletes data)
-docker-compose down -v
-```
-
-### Frontend Commands
-```bash
-cd frontend
-
-# Install dependencies
-npm install
-
-# Development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Lint code
-npm run lint
-
-# Preview production build
-npm run preview
-```
-
-### Backend Commands
-```bash
-cd backend/dr-halachmi-clinic
-
-# Run locally
-.\mvnw.cmd spring-boot:run
-
-# Run tests
-.\mvnw.cmd test
-
-# Build JAR
-.\mvnw.cmd clean package
-
-# Clean build artifacts
-.\mvnw.cmd clean
-```
-
-## Production Deployment Checklist
-
-Before deploying to production:
-
-### Security
-- [ ] Change default `ADMIN_PASSWORD` to a strong password
-- [ ] Set `SESSION_COOKIE_SECURE=true` (requires HTTPS)
-- [ ] Generate strong `DB_PASSWORD`
-- [ ] Use secrets management system (not plain `.env` files)
-- [ ] Enable HTTPS with SSL certificate
-- [ ] Set realistic `APP_CORS_ALLOWED_ORIGINS` to your domain
-
-### Configuration
-- [ ] Update `APP_CORS_ALLOWED_ORIGINS` to production frontend URL
-- [ ] Configure SMTP for email notifications (`SPRING_MAIL_*`)
-- [ ] Set production database credentials
-- [ ] Disable JPA SQL logging (`JPA_SHOW_SQL=false`)
-- [ ] Configure backup strategy for database
-
-### Performance
-- [ ] Optimize and compress images for web
-- [ ] Compress video assets for mobile
-- [ ] Run frontend build: `npm run build`
-- [ ] Run backend tests: `.\mvnw.cmd test`
-- [ ] Monitor Docker resource limits
-- [ ] Consider managed database service (AWS RDS, Google Cloud SQL, etc.)
-
-### Monitoring
-- [ ] Set up log aggregation
-- [ ] Configure health check monitoring
-- [ ] Enable application performance monitoring (APM)
-- [ ] Set up alerts for service failures
-- [ ] Enable database backups
-
-See [DOCKER_DEPLOYMENT.md](DOCKER_DEPLOYMENT.md) for detailed Docker production setup.
-
-## Troubleshooting
-
-### Using Docker
-
-**Services won't start:**
-```bash
-# Check service status
-docker-compose ps
-
-# View logs
-docker-compose logs
-
-# Rebuild and restart
-docker-compose down
-docker-compose up -d --build
-```
-
-**Backend connection issues:**
-```bash
-# Check if backend is healthy
-docker-compose exec backend curl http://localhost:8080/actuator/health
-
-# Check logs
-docker-compose logs backend
-```
-
-**Database connection issues:**
-```bash
-# Check database status
-docker-compose ps db
-
-# View database logs
-docker-compose logs db
-
-# Test database connection
-docker-compose exec db psql -U clinic_user -d dr_halachmi_clinic -c "SELECT 1"
-```
-
-**Frontend API errors:**
-```bash
-# Ensure backend URL is correct
-# Check APP_CORS_ALLOWED_ORIGINS matches frontend URL
-# Verify backend is accessible from frontend container
-docker-compose exec frontend curl http://backend:8080/actuator/health
-```
-
-### Local Setup
-
-**Backend won't start:**
-- Verify Java 21 is installed: `java -version`
-- Check PostgreSQL is running
-- Verify database credentials in environment variables
-- View logs for detailed error messages
-
-**Frontend shows API errors:**
-- Verify backend is running on `http://localhost:8080`
-- Check CORS configuration: `APP_CORS_ALLOWED_ORIGINS`
-- Verify frontend environment variables are set
-
-**Admin login fails:**
-- Confirm `ADMIN_USERNAME` and `ADMIN_PASSWORD` match your configuration
-- Check database is initialized with admin user
-- View backend logs for authentication errors
-
-**Database connection fails:**
-- Verify PostgreSQL is running: `psql -U postgres`
-- Check database exists: `\l` in psql
-- Verify user has permissions: `\du` in psql
-
-For more detailed troubleshooting, see [DOCKER_DEPLOYMENT.md](DOCKER_DEPLOYMENT.md).
-
-## Architecture
-
-### Backend (Spring Boot)
-- REST API for blog, admin, and contact operations
-- JWT session management for admin authentication
-- PostgreSQL database persistence
-- Email notifications (optional SMTP)
-- CORS configured for frontend origin
-- Health checks via Spring Actuator
-
-### Frontend (React + Vite)
-- Single Page Application with hash-based routing
-- Component-based UI with React 19
-- Vite for fast development and optimized builds
-- API client for backend communication
-- Responsive design for all screen sizes
-
-### Database (PostgreSQL)
-- Stores blog posts and visitor questions
-- Admin user credentials
-- Automatic schema initialization on startup
-- Persistent volume in Docker setup
-
-## License & Contributing
-
-Please refer to project guidelines for contributions and licensing information.
-
-## Support
-
-For issues or questions:
-1. Check [DOCKER_DEPLOYMENT.md](DOCKER_DEPLOYMENT.md) for Docker-specific help
-2. Review troubleshooting section above
-3. Check service logs: `docker-compose logs` or backend/frontend console output
-4. Verify all environment variables are correctly set
+[GitHub](https://github.com/DolHal) · [Live site](https://dr-halachmi.com)
