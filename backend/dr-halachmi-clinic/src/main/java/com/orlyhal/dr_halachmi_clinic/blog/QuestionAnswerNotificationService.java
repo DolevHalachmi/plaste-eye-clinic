@@ -44,9 +44,11 @@ public class QuestionAnswerNotificationService {
 			mailSender.send(message);
 			return DeliveryResult.sent("The post was published and the answer email was sent to the visitor.");
 		} catch (MailException exception) {
-			return DeliveryResult.failed(
-				"The post was published, but sending the answer email failed. Save the post again after mail is configured."
-			);
+			System.err.println("Mail send failed: " + exception.getMessage());
+			exception.printStackTrace();
+			return DeliveryResult.failed("The post was published, but sending the answer email failed. Save the post again after mail is configured.");
+		}
+
 		}
 	}
 
