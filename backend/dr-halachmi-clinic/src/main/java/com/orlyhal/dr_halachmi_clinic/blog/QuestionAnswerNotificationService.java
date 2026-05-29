@@ -52,7 +52,7 @@ public class QuestionAnswerNotificationService {
 		return """
 			שלום %s,
 
-			השאלה שהשארת באתר הקליניקה של דוקטור אורלי הלחמי נענת
+			השאלה שהשארת באתר הקליניקה של דוקטור אורלי הלחמי נענתה
 
 			שאלה:
 			%s
@@ -62,7 +62,7 @@ public class QuestionAnswerNotificationService {
 
 			לתגובות נוספות או לשאלות המשך, תוכלו לפנות אלינו בחשבון האמייל
 			md.halachmi@gmail.com
-			
+
 			תוכל למצוא גם את שאלתך באתר הקליניקה
 			%s
 

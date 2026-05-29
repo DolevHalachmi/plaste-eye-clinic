@@ -2,7 +2,7 @@ const routeList = [
   {
     key: 'home',
     path: '/',
-    title: 'Dr. Orly Halachmi Clinic | Eye Care, Aesthetics, and Pediatric Ophthalmology',
+    title: 'Dr. Orly Halachmi Clinic | קליניקה ד"ר אורלי הלחמי',
     description:
       'Dr. Orly Halachmi Clinic in Afula offers pediatric ophthalmology, strabismus care, eye exams, and medical aesthetic treatments.',
   },
