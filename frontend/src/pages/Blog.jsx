@@ -342,6 +342,10 @@ export default function Blog() {
     }
   }
 
+  const linkedQuestion = postForm.sourceQuestionId
+    ? questionIdeas.find((q) => q.id === postForm.sourceQuestionId) ?? null
+    : null;
+
   return (
     <>
       <section className="simple-page blog-page">
@@ -369,6 +373,14 @@ export default function Blog() {
               <p className="blog-meta">
                 This post is linked to a visitor question. Saving it will send the answer email if one has not already
                 been sent for this question.
+                {linkedQuestion?.email ? (
+                  <>
+                    {' '}Manual fallback:{' '}
+                    <a href={`mailto:${linkedQuestion.email}`} className="blog-meta-link">
+                      {linkedQuestion.email}
+                    </a>
+                  </>
+                ) : null}
               </p>
             ) : null}
             <div className="blog-editor-grid">
