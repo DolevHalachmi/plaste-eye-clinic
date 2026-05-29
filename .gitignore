@@ -30,6 +30,12 @@ frontend/dist/
 frontend/.vscode/
 frontend/*.iml
 
+# Original uncompressed videos — only the .optimized.mp4 versions are used in code
+# Do NOT re-add these; Vercel's 100 MB limit will be exceeded
+frontend/src/assets/aestheticImg/anesthetic page video.mp4
+frontend/src/assets/aestheticImg/B7.mp4
+frontend/src/assets/eyeImg/large video.mp4
+
 # IDE
 .idea/
 *.swp
