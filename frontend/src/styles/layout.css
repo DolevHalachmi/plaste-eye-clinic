@@ -211,6 +211,16 @@ footer {
   padding: 0.75rem 1.2rem;
 }
 
+.footer-privacy {
+  width: min(900px, 92%);
+  margin: 1.5rem auto 0;
+  text-align: center;
+  font-size: 0.72rem;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.45);
+  direction: rtl;
+}
+
 @media (max-width: 700px) {
   .nav-inner {
     display: grid;

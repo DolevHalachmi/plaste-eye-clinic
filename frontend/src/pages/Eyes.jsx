@@ -1,12 +1,12 @@
 import Slider from '../component/Slider';
 import VideoCard from '../component/VideoCard';
 import bgImage from '../assets/eyeImg/A2.webp';
-import img1 from '../assets/eyeImg/image (5).webp';
-import img2 from '../assets/eyeImg/image (6).webp';
-import img3 from '../assets/eyeImg/image (7).webp';
-import img4 from '../assets/eyeImg/image (8).webp';
-import img5 from '../assets/eyeImg/image (9).webp';
-import img6 from '../assets/eyeImg/image (10).webp';
+import img1 from '../assets/eyeImg/image (5).jpg';
+import img2 from '../assets/eyeImg/image (6).jpg';
+import img3 from '../assets/eyeImg/image (7).jpg';
+import img4 from '../assets/eyeImg/image (8).jpg';
+import img5 from '../assets/eyeImg/image (9).jpg';
+import img6 from '../assets/eyeImg/image (10).jpg';
 import largeVideo from '../assets/eyeImg/large video.mobile.mp4';
 
 const slides = [

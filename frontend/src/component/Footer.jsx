@@ -40,6 +40,14 @@ export default function Footer({ onNavigate }) {
           </button>
         </article>
       </div>
+
+      <p className="footer-privacy">
+        אתר זה משתמש ב-Vercel Analytics לצורך ספירת ביקורים בלבד. המידע לא יועבר לצד שלישי ולא ישמש לשיווק.
+        שאלות שנשלחות דרך הבלוג משמשות למענה בלבד ולא יתווספו לרשימת תפוצה.
+        {' · '}
+        This site uses Vercel Analytics solely to count visits. No data is shared or used for marketing.
+        Questions submitted via the blog are used for reply purposes only and will not be added to any mailing list.
+      </p>
     </footer>
   );
 }
