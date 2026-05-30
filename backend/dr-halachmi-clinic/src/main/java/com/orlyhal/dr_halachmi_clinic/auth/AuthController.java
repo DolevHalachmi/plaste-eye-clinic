@@ -1,5 +1,6 @@
 package com.orlyhal.dr_halachmi_clinic.auth;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -16,22 +17,50 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
 	private final AuthService authService;
+	private final RateLimitService rateLimitService;
 
-	// Injects the authentication service used by all auth endpoints.
-	public AuthController(AuthService authService) {
+	// Injects the authentication service and rate limiter used by all auth endpoints.
+	public AuthController(AuthService authService, RateLimitService rateLimitService) {
 		this.authService = authService;
+		this.rateLimitService = rateLimitService;
 	}
 
 	// Validates the submitted credentials and stores the admin in session on success.
 	@PostMapping("/login")
-	public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest, HttpSession session) {
+	public ResponseEntity<AuthResponse> login(
+		@Valid @RequestBody LoginRequest loginRequest,
+		HttpSession session,
+		HttpServletRequest request
+	) {
+		String clientIp = resolveClientIp(request);
+		RateLimitService.LoginRateLimitResult rateLimit = rateLimitService.consumeLoginAttempt(clientIp);
+
+		if (!rateLimit.allowed()) {
+			return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+				.body(new AuthResponse(false, rateLimit.warningMessage(), null));
+		}
+
 		return authService.authenticate(loginRequest.username(), loginRequest.password())
 			.map(admin -> {
 				session.setAttribute(AuthService.ADMIN_SESSION_KEY, admin);
 				return ResponseEntity.ok(new AuthResponse(true, "Login successful", admin));
 			})
-			.orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-				.body(new AuthResponse(false, "Invalid username or password", null)));
+			.orElseGet(() -> {
+				String message = rateLimit.hasWarning()
+					? "Invalid username or password. " + rateLimit.warningMessage()
+					: "Invalid username or password.";
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+					.body(new AuthResponse(false, message, null));
+			});
+	}
+
+	// Reads the real client IP, checking X-Forwarded-For first for proxy/CDN setups like Render.
+	private String resolveClientIp(HttpServletRequest request) {
+		String forwarded = request.getHeader("X-Forwarded-For");
+		if (forwarded != null && !forwarded.isBlank()) {
+			return forwarded.split(",")[0].trim();
+		}
+		return request.getRemoteAddr();
 	}
 
 	// Returns the active admin session so the frontend can stay logged in after refresh.
