@@ -53,7 +53,7 @@ public class RateLimitService {
 		return LoginRateLimitResult.allowed();
 	}
 
-	public record LoginRateLimitResult(boolean allowed, String warningMessage) {
+	public record LoginRateLimitResult(boolean permitted, String warningMessage) {
 
 		static LoginRateLimitResult allowed() {
 			return new LoginRateLimitResult(true, null);
@@ -67,7 +67,7 @@ public class RateLimitService {
 			return new LoginRateLimitResult(false, message);
 		}
 
-		boolean hasWarning() {
+		public boolean hasWarning() {
 			return warningMessage != null;
 		}
 	}

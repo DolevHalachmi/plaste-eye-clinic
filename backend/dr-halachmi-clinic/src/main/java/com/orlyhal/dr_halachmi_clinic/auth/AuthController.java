@@ -35,7 +35,7 @@ public class AuthController {
 		String clientIp = resolveClientIp(request);
 		RateLimitService.LoginRateLimitResult rateLimit = rateLimitService.consumeLoginAttempt(clientIp);
 
-		if (!rateLimit.allowed()) {
+		if (!rateLimit.permitted()) {
 			return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
 				.body(new AuthResponse(false, rateLimit.warningMessage(), null));
 		}
